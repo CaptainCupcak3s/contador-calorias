@@ -2,137 +2,143 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Control Calórico Fit</title>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MacroControl Fit</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0f172a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="MacroControl">
-
   <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#0f172a">
 </head>
 <body>
   <div class="container">
     <header>
       <h1>MacroControl</h1>
-      <p>Tu asistente inteligente de nutrición</p>
+      <p>Asistente de Nutrición y Entrenamiento</p>
     </header>
 
-    <div class="grid">
-      <!-- Calculadora de Metas -->
-      <form id="tdee-form" class="card">
-        <h2>Tus Datos Físicos</h2>
-        <div class="form-group">
-          <label>Género Biológico</label>
-          <div class="radio-group">
-            <label><input type="radio" name="gender" value="male" checked> Hombre</label>
-            <label><input type="radio" name="gender" value="female"> Mujer</label>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="age">Edad</label>
-            <input type="number" id="age" value="21" required min="10" max="100">
-          </div>
-          <div class="form-group">
-            <label for="weight">Peso (kg)</label>
-            <input type="number" id="weight" step="0.1" value="74" required min="30">
-          </div>
-          <div class="form-group">
-            <label for="height">Altura (cm)</label>
-            <input type="number" id="height" value="175" required min="100">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="steps">Pasos Diarios</label>
-            <input type="number" id="steps" value="8000" min="0" step="500">
-          </div>
-          <div class="form-group">
-            <label for="workout">Entreno (kcal)</label>
-            <input type="number" id="workout" value="300" min="0" placeholder="Ej: Gym/Boxeo">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="deficit-percent">% de Déficit</label>
-          <select id="deficit-percent">
-            <option value="10">10% - Leve</option>
-            <option value="20" selected>20% - Recomendado</option>
-            <option value="25">25% - Agresivo</option>
-          </select>
-        </div>
-        <button type="submit" class="btn-primary">Calcular Metas</button>
-      </form>
-
-      <!-- Resumen Calórico -->
-      <div id="results-card" class="card hidden">
-        <h2>Tu Meta Diaria</h2>
-        <div class="stats-grid">
-          <div class="stat-box highlight">
-            <span class="stat-label">Límite Calorías</span>
-            <span class="stat-value" id="target-val">0 kcal</span>
-          </div>
-        </div>
-        <div class="macros-grid">
-          <div class="macro-item protein">
-            <span class="macro-title">Proteínas</span>
-            <span class="macro-gram" id="protein-val">0g</span>
-          </div>
-          <div class="macro-item fats">
-            <span class="macro-title">Grasas</span>
-            <span class="macro-gram" id="fat-val">0g</span>
-          </div>
-          <div class="macro-item carbs">
-            <span class="macro-title">Carbohidratos</span>
-            <span class="macro-gram" id="carb-val">0g</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Buscador Inteligente API -->
-      <div id="database-card" class="card hidden">
-        <h2>Buscar Alimento</h2>
-        <div class="form-group relative">
-          <input type="text" id="api-search" placeholder="Ej: Pechuga de pollo, Arepa, Avena..." autocomplete="off">
-          <ul id="api-results" class="autocomplete-list hidden"></ul>
-        </div>
-      </div>
-
-      <!-- Registro Diario -->
-      <div id="tracking-card" class="card hidden">
-        <h2>Progreso de Hoy</h2>
-        <div class="progress-section">
-          <div class="progress-item">
-            <div class="progress-header"><span>Calorías</span> <span id="cal-progress-text">0 / 0 kcal</span></div>
-            <div class="progress-bar"><div id="cal-bar" class="progress-fill highlight-fill"></div></div>
-          </div>
-          <div class="progress-item">
-            <div class="progress-header"><span>Proteínas</span> <span id="pro-progress-text">0 / 0 g</span></div>
-            <div class="progress-bar"><div id="pro-bar" class="progress-fill protein-fill"></div></div>
-          </div>
-          <div class="progress-item">
-            <div class="progress-header"><span>Grasas</span> <span id="fat-progress-text">0 / 0 g</span></div>
-            <div class="progress-bar"><div id="fat-bar" class="progress-fill fats-fill"></div></div>
-          </div>
-          <div class="progress-item">
-            <div class="progress-header"><span>Carbos</span> <span id="carb-progress-text">0 / 0 g</span></div>
-            <div class="progress-bar"><div id="carb-bar" class="progress-fill carbs-fill"></div></div>
-          </div>
+    <!-- CONFIGURACIÓN DE METAS -->
+    <div class="card">
+      <h2>1. Configuración Diaria</h2>
+      <form id="tdee-form">
+        <div class="form-group row-group">
+          <label><input type="radio" name="gender" value="male" checked> Hombre</label>
+          <label><input type="radio" name="gender" value="female"> Mujer</label>
         </div>
         
-        <h3>Comidas Añadidas</h3>
-        <ul id="food-list" class="food-list"></ul>
-      </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="age">Edad:</label>
+            <input type="number" id="age" value="21" required>
+          </div>
+          <div class="form-group">
+            <label for="weight">Peso (kg):</label>
+            <input type="number" id="weight" step="0.1" value="75" required>
+          </div>
+        </div>
 
-      <!-- Controles del Día -->
-      <div id="controls-card" class="card hidden">
-        <button type="button" id="btn-reset-day" class="btn-danger">🔄 Reiniciar Registro de Hoy</button>
-      </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="height">Altura (cm):</label>
+            <input type="number" id="height" value="175" required>
+          </div>
+          <div class="form-group">
+            <label for="steps">Pasos (Aprox):</label>
+            <input type="number" id="steps" value="8000" required>
+          </div>
+        </div>
 
+        <div class="form-group">
+          <label for="workout-day">Rutina de hoy:</label>
+          <select id="workout-day" required>
+            <option value="0">Domingo - Recuperación total (0 kcal)</option>
+            <option value="350">Lunes - Empuje 2: Pecho y Hombro (350 kcal)</option>
+            <option value="350">Martes - Tirón 2: Espalda y Bíceps (350 kcal)</option>
+            <option value="450">Miércoles - Piernas: Prensa y Curl (450 kcal)</option>
+            <option value="350">Jueves - Empuje 1: Pecho Inclinado (350 kcal)</option>
+            <option value="350">Viernes - Tirón 1: Amplitud Espalda (350 kcal)</option>
+            <option value="500">Sábado - Cardio, Boxeo y Core (500 kcal)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="deficit-percent">Objetivo:</label>
+          <select id="deficit-percent">
+            <option value="15">Definición / Perder Grasa (-15%)</option>
+            <option value="0">Mantenimiento (0%)</option>
+            <option value="-10">Volumen Limpio (+10%)</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-submit">Calcular Metas</button>
+      </form>
     </div>
+
+    <!-- METAS DE MACROS -->
+    <div class="card hidden" id="results-card">
+      <h2>🎯 Tus Macros de Hoy</h2>
+      <div class="macros-grid">
+        <div class="macro-box">
+          <span class="macro-label">Calorías</span>
+          <span class="macro-val" id="target-val">0 kcal</span>
+        </div>
+        <div class="macro-box">
+          <span class="macro-label">Proteína</span>
+          <span class="macro-val" id="protein-val">0g</span>
+        </div>
+        <div class="macro-box">
+          <span class="macro-label">Grasas</span>
+          <span class="macro-val" id="fat-val">0g</span>
+        </div>
+        <div class="macro-box">
+          <span class="macro-label">Carbos</span>
+          <span class="macro-val" id="carb-val">0g</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MÓDULO DE HIDRATACIÓN -->
+    <div class="card hidden text-center" id="water-card">
+      <h2>💧 Hidratación</h2>
+      <p>Meta calculada: <strong id="water-target-text">0 ml</strong></p>
+      <div class="water-display">
+        <span id="water-consumed-text">0</span> ml
+      </div>
+      <button id="btn-add-water" class="btn-water">+ Añadir 250ml (1 Vaso)</button>
+    </div>
+
+    <!-- BUSCADOR -->
+    <div class="card hidden" id="database-card">
+      <h2>🔍 Buscar Alimento</h2>
+      <input type="text" id="api-search" placeholder="Ej: Pechuga de pollo, Arepa, Pan canilla..." autocomplete="off">
+      <ul id="api-results" class="results-list hidden"></ul>
+    </div>
+
+    <!-- REGISTRO Y PROGRESO -->
+    <div class="card hidden" id="tracking-card">
+      <h2>📊 Tu Progreso</h2>
+      
+      <div class="progress-section">
+        <div class="progress-header"><span>Calorías</span> <span id="cal-progress-text">0 / 0</span></div>
+        <div class="progress-bg"><div class="progress-fill cal-fill" id="cal-bar"></div></div>
+
+        <div class="progress-header"><span>Proteína</span> <span id="pro-progress-text">0 / 0</span></div>
+        <div class="progress-bg"><div class="progress-fill pro-fill" id="pro-bar"></div></div>
+
+        <div class="progress-header"><span>Grasas</span> <span id="fat-progress-text">0 / 0</span></div>
+        <div class="progress-bg"><div class="progress-fill fat-fill" id="fat-bar"></div></div>
+
+        <div class="progress-header"><span>Carbohidratos</span> <span id="carb-progress-text">0 / 0</span></div>
+        <div class="progress-bg"><div class="progress-fill carb-fill" id="carb-bar"></div></div>
+      </div>
+
+      <h3 style="margin-top: 20px;">Consumo de hoy:</h3>
+      <ul id="food-list" class="food-list"></ul>
+    </div>
+
+    <!-- CONTROLES -->
+    <div class="card hidden" id="controls-card">
+      <button id="btn-reset-day" class="btn-danger">Reiniciar Día</button>
+    </div>
+
   </div>
   <script src="app.js"></script>
 </body>
