@@ -1,4 +1,4 @@
-const CACHE_NAME = 'macro-control-v1';
+const CACHE_NAME = 'macro-control-v2';
 const ASSETS = [
   './',
   './index.html',
