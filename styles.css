@@ -4,40 +4,24 @@
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
   --primary: #3b82f6;
-  --primary-hover: #2563eb;
   --danger: #ef4444;
-  --success: #10b981;
-  --radius: 16px;
+  --radius: 12px;
 }
 
 * { box-sizing: border-box; }
 
 body {
-  margin: 0;
-  padding: 0;
+  margin: 0; padding: 0;
   background-color: var(--bg-dark);
   color: var(--text-main);
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-.container {
-  max-width: 600px; /* Ancho ideal para simular vista móvil en PC */
-  margin: 0 auto;
-  padding: 20px;
-}
+.container { max-width: 500px; margin: 0 auto; padding: 20px; }
 
-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-header h1 {
-  font-size: 1.8rem;
-  margin: 0 0 5px 0;
-  color: var(--primary);
-}
-
+header { text-align: center; margin-bottom: 25px; }
+header h1 { font-size: 1.8rem; margin: 0 0 5px 0; color: var(--primary); }
 header p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
 
 .card {
@@ -48,210 +32,85 @@ header p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-.card h2 { margin-top: 0; font-size: 1.3rem; border-bottom: 1px solid #334155; padding-bottom: 10px; }
-.card h3 { font-size: 1.1rem; color: var(--text-muted); margin-top: 20px; }
+.card h2 { margin-top: 0; font-size: 1.2rem; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+.card h3 { font-size: 1rem; color: var(--text-muted); margin-top: 20px; }
 
 .form-group { margin-bottom: 15px; }
-.form-row { display: flex; gap: 15px; }
+.form-row { display: flex; gap: 10px; }
 .form-row .form-group { flex: 1; }
 
-label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: var(--text-muted);
-}
+label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
 
-input[type="number"], input[type="text"], input[type="search"], select {
-  width: 100%;
-  padding: 12px;
+input[type="number"], input[type="text"], select {
+  width: 100%; padding: 12px;
   background-color: #0f172a;
   border: 1px solid #334155;
-  border-radius: 8px;
-  color: white;
-  font-size: 1rem;
-  outline: none;
+  border-radius: 8px; color: white;
+  font-size: 1rem; outline: none;
 }
-
 input:focus, select:focus { border-color: var(--primary); }
 
 .radio-group {
-  display: flex; gap: 20px;
-  background: #0f172a;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #334155;
+  display: flex; gap: 20px; background: #0f172a;
+  padding: 12px; border-radius: 8px; border: 1px solid #334155;
 }
 
-.btn-primary, .btn-secondary, .btn-danger {
-  width: 100%;
-  padding: 14px;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: opacity 0.2s;
+.btn-primary, .btn-danger {
+  width: 100%; padding: 14px;
+  border: none; border-radius: 8px;
+  font-weight: bold; font-size: 1rem;
+  cursor: pointer; transition: opacity 0.2s; color: white;
 }
-
-.btn-primary { background: var(--primary); color: white; margin-top: 10px; }
-.btn-secondary { background: #334155; color: white; margin-top: 10px; }
-.btn-danger { background: var(--danger); color: white; margin-top: 10px; }
-
-.btn-primary:hover, .btn-secondary:hover, .btn-danger:hover { opacity: 0.9; }
+.btn-primary { background: var(--primary); }
+.btn-danger { background: var(--danger); }
+.btn-primary:hover, .btn-danger:hover { opacity: 0.8; }
 
 .hidden { display: none !important; }
 
-/* Grids de Resultados y Macros */
+/* Grid Macros */
 .stats-grid, .macros-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-top: 15px;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 10px; margin-top: 15px;
 }
-
+.stats-grid { grid-template-columns: 1fr; }
 .stat-box, .macro-item {
-  background: #0f172a;
-  padding: 15px 10px;
-  border-radius: 12px;
-  text-align: center;
-  border: 1px solid #334155;
+  background: #0f172a; padding: 15px 10px;
+  border-radius: 8px; text-align: center; border: 1px solid #334155;
 }
-
 .stat-box.highlight { border-color: var(--primary); background: rgba(59, 130, 246, 0.1); }
-
 .stat-label, .macro-title { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px; }
 .stat-value, .macro-gram { display: block; font-size: 1.2rem; font-weight: bold; }
-.macro-kcal { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; }
 
-/* Barras de Progreso */
-.progress-section { margin: 20px 0; }
+/* Buscador Autocomplete */
+.relative { position: relative; }
+.autocomplete-list {
+  position: absolute; top: 100%; left: 0; right: 0;
+  background: var(--card-bg);
+  border: 1px solid #334155; border-radius: 8px;
+  list-style: none; padding: 0; margin: 5px 0 0 0;
+  max-height: 250px; overflow-y: auto; z-index: 50;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+}
+.autocomplete-list li {
+  padding: 12px; border-bottom: 1px solid #334155;
+  cursor: pointer; font-size: 0.9rem;
+}
+.autocomplete-list li:hover { background: #0f172a; color: var(--primary); }
+.autocomplete-list li:last-child { border-bottom: none; }
+
+/* Progreso y Lista */
 .progress-item { margin-bottom: 12px; }
 .progress-header { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 5px; }
 .progress-bar { width: 100%; height: 8px; background: #334155; border-radius: 4px; overflow: hidden; }
 .progress-fill { height: 100%; background: var(--primary); transition: width 0.3s ease; }
 .progress-fill.danger-fill { background: var(--danger); }
 
-/* Lista de Comidas */
-.food-list { list-style: none; padding: 0; margin: 20px 0 0 0; }
+.food-list { list-style: none; padding: 0; margin: 0; }
 .food-list li {
-  background: #0f172a;
-  padding: 12px 15px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #334155;
+  background: #0f172a; padding: 12px 15px; border-radius: 8px;
+  margin-bottom: 10px; border: 1px solid #334155;
 }
 .food-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
 .food-title { font-weight: bold; font-size: 0.95rem; }
 .btn-delete { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1.2rem; }
 .food-details { display: block; font-size: 0.8rem; color: var(--text-muted); }
-
-/* Buscador OpenFoodFacts */
-.food-search-section {
-  margin: 22px 0;
-  padding: 16px;
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 12px;
-}
-
-.food-search-section h3 { margin-top: 0; }
-.small-text { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
-.food-search-wrap { position: relative; }
-.food-search-wrap label, .exact-grams-control label { display: block; margin-bottom: 6px; }
-.food-search-wrap input[type="search"] { width: 100%; }
-
-.food-search-results {
-  position: absolute;
-  z-index: 5;
-  top: calc(100% - 12px);
-  left: 0;
-  right: 0;
-  max-height: 320px;
-  overflow-y: auto;
-  list-style: none;
-  margin: 0;
-  padding: 6px;
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 0 0 10px 10px;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
-}
-
-.food-search-results li + li { border-top: 1px solid #334155; }
-.food-search-result {
-  display: block;
-  width: 100%;
-  padding: 11px 10px;
-  text-align: left;
-  color: var(--text-main);
-  background: transparent;
-  border: 0;
-  border-radius: 6px;
-  cursor: pointer;
-}
-.food-search-result:hover, .food-search-result:focus-visible { background: #334155; outline: none; }
-.food-search-result-name, .food-search-result-macros { display: block; }
-.food-search-result-name { font-weight: 600; overflow-wrap: anywhere; }
-.food-search-result-macros { margin-top: 4px; color: var(--text-muted); font-size: 0.78rem; }
-.search-status { min-height: 1.2em; margin: 8px 0 0; color: var(--text-muted); font-size: 0.8rem; }
-
-.selected-food-form {
-  margin-top: 14px;
-  padding: 14px;
-  background: #0f172a;
-  border: 1px solid #334155;
-  border-radius: 10px;
-}
-.selected-food-form h4 { margin: 0 0 6px; overflow-wrap: anywhere; }
-.selected-food-form .small-text { margin: 0 0 14px; }
-.portion-options { min-width: 0; margin: 0; padding: 12px; border: 1px solid #334155; border-radius: 8px; }
-.portion-options legend { padding: 0 5px; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; }
-.portion-choice { display: flex; align-items: center; gap: 9px; margin: 7px 0; color: var(--text-main); }
-.portion-choice input { accent-color: var(--primary); }
-.exact-grams-control { margin-top: 12px; }
-.exact-grams-control input:disabled { opacity: 0.55; cursor: not-allowed; }
-
-@media (max-width: 480px) {
-  .food-search-section { padding: 12px; }
-  .food-search-results { max-height: 260px; }
-  .food-search-result { padding: 10px 8px; }
-}
-.relative { 
-  position: relative; 
-}
-
-.autocomplete-list {
-  position: absolute;
-  top: 100%; 
-  left: 0; 
-  right: 0;
-  background: var(--card-bg);
-  border: 1px solid #334155;
-  border-radius: 8px;
-  list-style: none;
-  padding: 0; 
-  margin: 5px 0 0 0;
-  max-height: 220px;
-  overflow-y: auto;
-  z-index: 50;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-}
-
-.autocomplete-list li {
-  padding: 12px;
-  border-bottom: 1px solid #334155;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: background 0.2s;
-}
-
-.autocomplete-list li:hover { 
-  background: #0f172a; 
-  color: var(--primary); 
-}
-
-.autocomplete-list li:last-child { 
-  border-bottom: none; 
-}
