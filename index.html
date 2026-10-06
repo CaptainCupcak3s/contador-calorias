@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Control Calórico Fit</title>
   
-  <!-- Configuración PWA y Móvil -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,16 +17,14 @@
 <body>
   <div class="container">
     <header>
-      <h1>Control Calórico & Déficit</h1>
-      <p>Tu aplicación personal de nutrición y entrenamiento</p>
+      <h1>MacroControl</h1>
+      <p>Tu asistente inteligente de nutrición</p>
     </header>
 
     <div class="grid">
-
-      <!-- ==================== AQUÍ MÓDULO 1: CALCULADORA TDEE Y DÉFICIT ==================== -->
+      <!-- Calculadora de Metas -->
       <form id="tdee-form" class="card">
-        <h2>Tus Datos Personales</h2>
-        
+        <h2>Tus Datos Físicos</h2>
         <div class="form-group">
           <label>Género Biológico</label>
           <div class="radio-group">
@@ -35,101 +32,78 @@
             <label><input type="radio" name="gender" value="female"> Mujer</label>
           </div>
         </div>
-
         <div class="form-row">
           <div class="form-group">
-            <label for="age">Edad (años)</label>
+            <label for="age">Edad</label>
             <input type="number" id="age" value="21" required min="10" max="100">
           </div>
           <div class="form-group">
             <label for="weight">Peso (kg)</label>
-            <input type="number" id="weight" step="0.1" value="75" required min="30">
+            <input type="number" id="weight" step="0.1" value="74" required min="30">
           </div>
           <div class="form-group">
-            <label for="height">Estatura (cm)</label>
+            <label for="height">Altura (cm)</label>
             <input type="number" id="height" value="175" required min="100">
           </div>
         </div>
-
-        <h3>Actividad del Día</h3>
         <div class="form-row">
           <div class="form-group">
             <label for="steps">Pasos Diarios</label>
             <input type="number" id="steps" value="8000" min="0" step="500">
           </div>
           <div class="form-group">
-            <label for="workout">Gasto Entrenamiento (kcal)</label>
-            <input type="number" id="workout" value="300" min="0" placeholder="Ej: Pesas / Boxeo">
+            <label for="workout">Entreno (kcal)</label>
+            <input type="number" id="workout" value="300" min="0" placeholder="Ej: Gym/Boxeo">
           </div>
         </div>
-
-        <h3>Objetivo de Déficit</h3>
         <div class="form-group">
-          <label for="deficit-percent">% de Déficit Calórico</label>
+          <label for="deficit-percent">% de Déficit</label>
           <select id="deficit-percent">
-            <option value="10">10% - Déficit Leve</option>
-            <option value="15">15% - Moderado</option>
-            <option value="20" selected>20% - Recomendado / Estándar</option>
+            <option value="10">10% - Leve</option>
+            <option value="20" selected>20% - Recomendado</option>
             <option value="25">25% - Agresivo</option>
           </select>
         </div>
-
-        <button type="submit" class="btn-primary">Calcular TDEE y Meta</button>
+        <button type="submit" class="btn-primary">Calcular Metas</button>
       </form>
 
-      <!-- RESULTADOS DEL MÓDULO 1 -->
+      <!-- Resumen Calórico -->
       <div id="results-card" class="card hidden">
-        <h2>Resumen Calórico</h2>
-        
+        <h2>Tu Meta Diaria</h2>
         <div class="stats-grid">
-          <div class="stat-box">
-            <span class="stat-label">Metabolismo Basal (TMB)</span>
-            <span class="stat-value" id="bmr-val">0 kcal</span>
-            <small>Lo que tu cuerpo gasta en reposo absoluto</small>
-          </div>
-
-          <div class="stat-box">
-            <span class="stat-label">Gasto Total (TDEE)</span>
-            <span class="stat-value" id="tdee-val">0 kcal</span>
-            <small>Incluye tu tasa basal + pasos + entreno</small>
-          </div>
-
           <div class="stat-box highlight">
-            <span class="stat-label">Meta Diaria (Déficit)</span>
+            <span class="stat-label">Límite Calorías</span>
             <span class="stat-value" id="target-val">0 kcal</span>
-            <small>Límite objetivo de consumo hoy</small>
           </div>
         </div>
-
-        <h3>Distribución de Macros Recomendada</h3>
         <div class="macros-grid">
           <div class="macro-item protein">
-            <span class="macro-title">Proteínas (2.0g/kg)</span>
+            <span class="macro-title">Proteínas</span>
             <span class="macro-gram" id="protein-val">0g</span>
-            <span class="macro-kcal" id="protein-kcal">0 kcal</span>
           </div>
-
           <div class="macro-item fats">
-            <span class="macro-title">Grasas (0.9g/kg)</span>
+            <span class="macro-title">Grasas</span>
             <span class="macro-gram" id="fat-val">0g</span>
-            <span class="macro-kcal" id="fat-kcal">0 kcal</span>
           </div>
-
           <div class="macro-item carbs">
-            <span class="macro-title">Carbohidratos (Resto)</span>
+            <span class="macro-title">Carbohidratos</span>
             <span class="macro-gram" id="carb-val">0g</span>
-            <span class="macro-kcal" id="carb-kcal">0 kcal</span>
           </div>
         </div>
       </div>
-      <!-- ==================== FIN MÓDULO 1 ==================== -->
 
+      <!-- Buscador Inteligente API -->
+      <div id="database-card" class="card hidden">
+        <h2>Buscar Alimento</h2>
+        <div class="form-group relative">
+          <input type="text" id="api-search" placeholder="Ej: Pechuga de pollo, Arepa, Avena..." autocomplete="off">
+          <ul id="api-results" class="autocomplete-list hidden"></ul>
+        </div>
+      </div>
 
-      <!-- ==================== AQUÍ MÓDULO 2: REGISTRO DE COMIDAS Y PROGRESO ==================== -->
+      <!-- Registro Diario -->
       <div id="tracking-card" class="card hidden">
-        <h2>Registro del Día</h2>
-        
-        <!-- Barras de Progreso Visual -->
+        <h2>Progreso de Hoy</h2>
         <div class="progress-section">
           <div class="progress-item">
             <div class="progress-header"><span>Calorías</span> <span id="cal-progress-text">0 / 0 kcal</span></div>
@@ -144,81 +118,22 @@
             <div class="progress-bar"><div id="fat-bar" class="progress-fill fats-fill"></div></div>
           </div>
           <div class="progress-item">
-            <div class="progress-header"><span>Carbohidratos</span> <span id="carb-progress-text">0 / 0 g</span></div>
+            <div class="progress-header"><span>Carbos</span> <span id="carb-progress-text">0 / 0 g</span></div>
             <div class="progress-bar"><div id="carb-bar" class="progress-fill carbs-fill"></div></div>
           </div>
         </div>
-
-        <!-- Buscador de alimentos conectado a OpenFoodFacts -->
-        <section class="food-search-section" aria-labelledby="food-search-title">
-          <h3 id="food-search-title">Buscar alimento</h3>
-          <p class="small-text">Busca productos reales en OpenFoodFacts y selecciona uno para registrar sus macros.</p>
-          <div class="food-search-wrap">
-            <label for="food-search-input">Nombre del alimento</label>
-            <input type="search" id="food-search-input" placeholder="Ej: brownie o pechuga de pollo" autocomplete="off" aria-autocomplete="list" aria-controls="food-search-results">
-            <ul id="food-search-results" class="food-search-results hidden" role="listbox" aria-label="Resultados de alimentos"></ul>
-            <p id="food-search-status" class="search-status" aria-live="polite"></p>
-          </div>
-
-          <form id="selected-food-form" class="selected-food-form hidden">
-            <h4 id="selected-food-name"></h4>
-            <p id="selected-food-nutrition" class="small-text"></p>
-            <fieldset class="portion-options">
-              <legend>Cantidad consumida</legend>
-              <label class="portion-choice">
-                <input type="radio" name="portion-mode" value="standard" checked>
-                <span id="standard-portion-label">Porción estándar (100 g)</span>
-              </label>
-              <label class="portion-choice">
-                <input type="radio" name="portion-mode" value="grams">
-                <span>Gramos exactos</span>
-              </label>
-              <div class="exact-grams-control">
-                <label for="exact-grams">Cantidad en gramos</label>
-                <input type="number" id="exact-grams" min="1" step="1" value="100" inputmode="decimal" disabled>
-              </div>
-            </fieldset>
-            <button type="submit" class="btn-secondary">+ Añadir a mi registro</button>
-          </form>
-        </section>
-
-        <!-- Lista de lo que has comido hoy -->
-        <ul id="food-list" class="food-list">
-          <!-- Aquí aparecerán las comidas agregadas -->
-        </ul>
+        
+        <h3>Comidas Añadidas</h3>
+        <ul id="food-list" class="food-list"></ul>
       </div>
-      <!-- ==================== FIN MÓDULO 2 ==================== -->
 
+      <!-- Controles del Día -->
+      <div id="controls-card" class="card hidden">
+        <button type="button" id="btn-reset-day" class="btn-danger">🔄 Reiniciar Registro de Hoy</button>
+      </div>
 
-      <!-- ==================== AQUÍ MÓDULO 3: BASE DE DATOS Y RECOMENDADOR ALEATORIO ==================== -->
-     <!-- ==================== MÓDULO 3: BUSCADOR INTELIGENTE (API) ==================== -->
-<div id="database-card" class="card hidden">
-  <h2>Buscador de Alimentos</h2>
-  
-  <div class="db-section">
-    <div class="form-group relative">
-      <label for="api-search">Buscar alimento en línea:</label>
-      <input type="text" id="api-search" placeholder="Ej: Brownie, Pechuga, Arepa, Guayanés..." autocomplete="off">
-      <ul id="api-results" class="autocomplete-list hidden"></ul>
     </div>
   </div>
-</div>
-      <!-- ==================== FIN MÓDULO 3 ==================== -->
-
-
-      <!-- ==================== AQUÍ MÓDULO 4: PERSISTENCIA Y CONTROLES DÍA ==================== -->
-      <div id="controls-card" class="card hidden">
-        <h2>Gestión del Día</h2>
-        <p class="small-text">Tus datos se guardan automáticamente en este dispositivo.</p>
-        <div class="controls-actions">
-          <button type="button" id="btn-reset-day" class="btn-danger">🔄 Reiniciar Registro de Hoy</button>
-        </div>
-      </div>
-      <!-- ==================== FIN MÓDULO 4 ==================== -->
-
-    </div> <!-- Fin de .grid -->
-  </div> <!-- Fin de .container -->
-
   <script src="app.js"></script>
 </body>
 </html>
