@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora TDEE & Déficit Calórico</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Control Calórico Módulo 1</h1>
+      <p>Calculadora de TDEE, Déficit y Macronutrientes</p>
+    </header>
+
+    <div class="grid">
+      <!-- FORMULARIO DE DATOS -->
+      <form id="tdee-form" class="card">
+        <h2>Tus Datos Personales</h2>
+        
+        <div class="form-group">
+          <label>Género Biológico</label>
+          <div class="radio-group">
+            <label><input type="radio" name="gender" value="male" checked> Hombre</label>
+            <label><input type="radio" name="gender" value="female"> Mujer</label>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="age">Edad (años)</label>
+            <input type="number" id="age" value="21" required min="10" max="100">
+          </div>
+          <div class="form-group">
+            <label for="weight">Peso (kg)</label>
+            <input type="number" id="weight" step="0.1" value="75" required min="30">
+          </div>
+          <div class="form-group">
+            <label for="height">Estatura (cm)</label>
+            <input type="number" id="height" value="175" required min="100">
+          </div>
+        </div>
+
+        <h3>Actividad del Día</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="steps">Pasos Diarios</label>
+            <input type="number" id="steps" value="8000" min="0" step="500">
+          </div>
+          <div class="form-group">
+            <label for="workout">Gasto Entrenamiento (kcal)</label>
+            <input type="number" id="workout" value="300" min="0" placeholder="Ej: Pesas / Boxeo">
+          </div>
+        </div>
+
+        <h3>Objetivo de Déficit</h3>
+        <div class="form-group">
+          <label for="deficit-percent">% de Déficit Calórico</label>
+          <select id="deficit-percent">
+            <option value="10">10% - Déficit Leve</option>
+            <option value="15">15% - Moderado</option>
+            <option value="20" selected>20% - Recomendado / Estándar</option>
+            <option value="25">25% - Agresivo</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-primary">Calcular TDEE y Meta</button>
+      </form>
+
+      <!-- RESULTADOS -->
+      <div id="results-card" class="card hidden">
+        <h2>Resumen Calórico</h2>
+        
+        <div class="stats-grid">
+          <div class="stat-box">
+            <span class="stat-label">Metabolismo Basal (TMB)</span>
+            <span class="stat-value" id="bmr-val">0 kcal</span>
+            <small>Lo que tu cuerpo gasta en reposo absoluto</small>
+          </div>
+
+          <div class="stat-box">
+            <span class="stat-label">Gasto Total (TDEE)</span>
+            <span class="stat-value" id="tdee-val">0 kcal</span>
+            <small>Incluye tu tasa basal + pasos + entreno</small>
+          </div>
+
+          <div class="stat-box highlight">
+            <span class="stat-label">Meta Diaria (Déficit)</span>
+            <span class="stat-value" id="target-val">0 kcal</span>
+            <small>Límite objetivo de consumo hoy</small>
+          </div>
+        </div>
+
+        <h3>Distribución de Macros Recomendada</h3>
+        <div class="macros-grid">
+          <div class="macro-item protein">
+            <span class="macro-title">Proteínas (2.0g/kg)</span>
+            <span class="macro-gram" id="protein-val">0g</span>
+            <span class="macro-kcal" id="protein-kcal">0 kcal</span>
+          </div>
+
+          <div class="macro-item fats">
+            <span class="macro-title">Grasas (0.9g/kg)</span>
+            <span class="macro-gram" id="fat-val">0g</span>
+            <span class="macro-kcal" id="fat-kcal">0 kcal</span>
+          </div>
+
+          <div class="macro-item carbs">
+            <span class="macro-title">Carbohidratos (Resto)</span>
+            <span class="macro-gram" id="carb-val">0g</span>
+            <span class="macro-kcal" id="carb-kcal">0 kcal</span>
+          </div>
+        </div>
+      </div>
+      <!-- MÓDULO 2: REGISTRO DE COMIDAS Y PROGRESO -->
+      <div id="tracking-card" class="card hidden">
+        <h2>Registro del Día</h2>
+        
+        <!-- Barras de Progreso Visual -->
+        <div class="progress-section">
+          <div class="progress-item">
+            <div class="progress-header"><span>Calorías</span> <span id="cal-progress-text">0 / 0 kcal</span></div>
+            <div class="progress-bar"><div id="cal-bar" class="progress-fill highlight-fill"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-header"><span>Proteínas</span> <span id="pro-progress-text">0 / 0 g</span></div>
+            <div class="progress-bar"><div id="pro-bar" class="progress-fill protein-fill"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-header"><span>Grasas</span> <span id="fat-progress-text">0 / 0 g</span></div>
+            <div class="progress-bar"><div id="fat-bar" class="progress-fill fats-fill"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-header"><span>Carbohidratos</span> <span id="carb-progress-text">0 / 0 g</span></div>
+            <div class="progress-bar"><div id="carb-bar" class="progress-fill carbs-fill"></div></div>
+          </div>
+        </div>
+
+        <!-- Formulario para agregar alimento -->
+        <form id="food-form" class="food-form">
+          <h3>Añadir Alimento</h3>
+          <div class="form-group">
+            <input type="text" id="food-name" placeholder="Ej: Arepa de maíz con queso (200g)" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><input type="number" id="food-cal" placeholder="Kcal" required min="0"></div>
+            <div class="form-group"><input type="number" id="food-pro" placeholder="Prot (g)" required min="0"></div>
+            <div class="form-group"><input type="number" id="food-fat" placeholder="Grasa (g)" required min="0"></div>
+            <div class="form-group"><input type="number" id="food-carb" placeholder="Carb (g)" required min="0"></div>
+          </div>
+          <button type="submit" class="btn-secondary">+ Añadir a mi registro</button>
+        </form>
+
+        <!-- Lista de lo que has comido hoy -->
+        <ul id="food-list" class="food-list">
+          <!-- Aquí aparecerán las comidas -->
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

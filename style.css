@@ -1,0 +1,280 @@
+:root {
+  --bg-color: #0f172a;
+  --card-bg: #1e293b;
+  --accent: #10b981;
+  --accent-hover: #059669;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  max-width: 1000px;
+  width: 100%;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+header h1 {
+  font-size: 2rem;
+  color: var(--accent);
+}
+
+header p {
+  color: var(--text-muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.card {
+  background-color: var(--card-bg);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+h2, h3 {
+  margin-bottom: 16px;
+  font-size: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+input, select {
+  background-color: #0f172a;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+input:focus, select:focus {
+  outline: 2px solid var(--accent);
+}
+
+.radio-group {
+  display: flex;
+  gap: 20px;
+  padding-top: 5px;
+}
+
+.btn-primary {
+  width: 100%;
+  background-color: var(--accent);
+  color: #000;
+  font-weight: 700;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+  margin-top: 10px;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-hover);
+}
+
+.stats-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-box {
+  background-color: #0f172a;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border-left: 4px solid var(--border-color);
+}
+
+.stat-box.highlight {
+  border-left-color: var(--accent);
+  background-color: #064e3b22;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.stat-box small {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.macros-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.macro-item {
+  background: #0f172a;
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.macro-item.protein { border-right: 4px solid #ef4444; }
+.macro-item.fats { border-right: 4px solid #eab308; }
+.macro-item.carbs { border-right: 4px solid #3b82f6; }
+
+.macro-title { font-weight: 600; font-size: 0.9rem; }
+.macro-gram { font-weight: 700; font-size: 1.1rem; }
+.macro-kcal { font-size: 0.85rem; color: var(--text-muted); }
+
+.hidden {
+  display: none;
+}
+/* --- ESTILOS DEL MÓDULO 2 --- */
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.progress-item .progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  color: var(--text-muted);
+}
+
+.progress-bar {
+  background-color: #0f172a;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%; /* Inicia vacío */
+  transition: width 0.4s ease, background-color 0.4s ease;
+}
+
+/* Colores de las barras */
+.highlight-fill { background-color: var(--accent); }
+.protein-fill { background-color: #ef4444; }
+.fats-fill { background-color: #eab308; }
+.carbs-fill { background-color: #3b82f6; }
+.danger-fill { background-color: #dc2626 !important; } /* Se activa si te pasas de calorías */
+
+.food-form {
+  background-color: #0f172a;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  border: 1px dashed var(--border-color);
+}
+
+.btn-secondary {
+  width: 100%;
+  background-color: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 10px;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: var(--accent);
+  color: #000;
+}
+
+.food-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.food-list li {
+  background-color: #0f172a;
+  padding: 12px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  border-left: 3px solid var(--accent);
+}
+
+.food-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.food-details {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
