@@ -3,19 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora TDEE & Déficit Calórico</title>
+  <title>Control Calórico Fit</title>
+  
+  <!-- Configuración PWA y Móvil -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MacroControl">
+
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>Control Calórico Módulo 1</h1>
-      <p>Calculadora de TDEE, Déficit y Macronutrientes</p>
+      <h1>Control Calórico & Déficit</h1>
+      <p>Tu aplicación personal de nutrición y entrenamiento</p>
     </header>
 
     <div class="grid">
-      <!-- FORMULARIO DE DATOS -->
+
+      <!-- ==================== AQUÍ MÓDULO 1: CALCULADORA TDEE Y DÉFICIT ==================== -->
       <form id="tdee-form" class="card">
         <h2>Tus Datos Personales</h2>
         
@@ -68,7 +77,7 @@
         <button type="submit" class="btn-primary">Calcular TDEE y Meta</button>
       </form>
 
-      <!-- RESULTADOS -->
+      <!-- RESULTADOS DEL MÓDULO 1 -->
       <div id="results-card" class="card hidden">
         <h2>Resumen Calórico</h2>
         
@@ -113,7 +122,10 @@
           </div>
         </div>
       </div>
-      <!-- MÓDULO 2: REGISTRO DE COMIDAS Y PROGRESO -->
+      <!-- ==================== FIN MÓDULO 1 ==================== -->
+
+
+      <!-- ==================== AQUÍ MÓDULO 2: REGISTRO DE COMIDAS Y PROGRESO ==================== -->
       <div id="tracking-card" class="card hidden">
         <h2>Registro del Día</h2>
         
@@ -137,28 +149,96 @@
           </div>
         </div>
 
-        <!-- Formulario para agregar alimento -->
-        <form id="food-form" class="food-form">
-          <h3>Añadir Alimento</h3>
-          <div class="form-group">
-            <input type="text" id="food-name" placeholder="Ej: Arepa de maíz con queso (200g)" required>
+        <!-- Buscador de alimentos conectado a OpenFoodFacts -->
+        <section class="food-search-section" aria-labelledby="food-search-title">
+          <h3 id="food-search-title">Buscar alimento</h3>
+          <p class="small-text">Busca productos reales en OpenFoodFacts y selecciona uno para registrar sus macros.</p>
+          <div class="food-search-wrap">
+            <label for="food-search-input">Nombre del alimento</label>
+            <input type="search" id="food-search-input" placeholder="Ej: brownie o pechuga de pollo" autocomplete="off" aria-autocomplete="list" aria-controls="food-search-results">
+            <ul id="food-search-results" class="food-search-results hidden" role="listbox" aria-label="Resultados de alimentos"></ul>
+            <p id="food-search-status" class="search-status" aria-live="polite"></p>
           </div>
-          <div class="form-row">
-            <div class="form-group"><input type="number" id="food-cal" placeholder="Kcal" required min="0"></div>
-            <div class="form-group"><input type="number" id="food-pro" placeholder="Prot (g)" required min="0"></div>
-            <div class="form-group"><input type="number" id="food-fat" placeholder="Grasa (g)" required min="0"></div>
-            <div class="form-group"><input type="number" id="food-carb" placeholder="Carb (g)" required min="0"></div>
-          </div>
-          <button type="submit" class="btn-secondary">+ Añadir a mi registro</button>
-        </form>
+
+          <form id="selected-food-form" class="selected-food-form hidden">
+            <h4 id="selected-food-name"></h4>
+            <p id="selected-food-nutrition" class="small-text"></p>
+            <fieldset class="portion-options">
+              <legend>Cantidad consumida</legend>
+              <label class="portion-choice">
+                <input type="radio" name="portion-mode" value="standard" checked>
+                <span id="standard-portion-label">Porción estándar (100 g)</span>
+              </label>
+              <label class="portion-choice">
+                <input type="radio" name="portion-mode" value="grams">
+                <span>Gramos exactos</span>
+              </label>
+              <div class="exact-grams-control">
+                <label for="exact-grams">Cantidad en gramos</label>
+                <input type="number" id="exact-grams" min="1" step="1" value="100" inputmode="decimal" disabled>
+              </div>
+            </fieldset>
+            <button type="submit" class="btn-secondary">+ Añadir a mi registro</button>
+          </form>
+        </section>
 
         <!-- Lista de lo que has comido hoy -->
         <ul id="food-list" class="food-list">
-          <!-- Aquí aparecerán las comidas -->
+          <!-- Aquí aparecerán las comidas agregadas -->
         </ul>
       </div>
-    </div>
-  </div>
+      <!-- ==================== FIN MÓDULO 2 ==================== -->
+
+
+      <!-- ==================== AQUÍ MÓDULO 3: BASE DE DATOS Y RECOMENDADOR ALEATORIO ==================== -->
+      <div id="database-card" class="card hidden">
+        <h2>Base de Datos y Sugeridor</h2>
+
+        <!-- Opción A: Búsqueda Rápida de Alimentos -->
+        <div class="db-section">
+          <h3>Buscador Rápido de Alimentos</h3>
+          <div class="form-group">
+            <label for="db-select">Selecciona un alimento predeterminado:</label>
+            <select id="db-select">
+              <option value="">-- Selecciona un alimento --</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="db-grams">Cantidad (gramos / porciones):</label>
+              <input type="number" id="db-grams" value="100" min="10" step="10">
+            </div>
+            <button type="button" id="btn-add-db" class="btn-secondary">+ Añadir a Registro</button>
+          </div>
+        </div>
+
+        <!-- Opción B: Recomendador de Menú -->
+        <div class="recommender-section">
+          <h3>¿Qué puedo comer con lo que me queda hoy?</h3>
+          <p class="small-text">Analiza tu cupo restante y busca una opción en tu base de datos.</p>
+          <button type="button" id="btn-recommend" class="btn-primary">🎲 Sugerir Plato Aleatorio</button>
+          
+          <div id="recommendation-result" class="recommendation-box hidden">
+            <!-- Aquí aparecerá la sugerencia de comida -->
+          </div>
+        </div>
+      </div>
+      <!-- ==================== FIN MÓDULO 3 ==================== -->
+
+
+      <!-- ==================== AQUÍ MÓDULO 4: PERSISTENCIA Y CONTROLES DÍA ==================== -->
+      <div id="controls-card" class="card hidden">
+        <h2>Gestión del Día</h2>
+        <p class="small-text">Tus datos se guardan automáticamente en este dispositivo.</p>
+        <div class="controls-actions">
+          <button type="button" id="btn-reset-day" class="btn-danger">🔄 Reiniciar Registro de Hoy</button>
+        </div>
+      </div>
+      <!-- ==================== FIN MÓDULO 4 ==================== -->
+
+    </div> <!-- Fin de .grid -->
+  </div> <!-- Fin de .container -->
 
   <script src="app.js"></script>
 </body>
