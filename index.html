@@ -191,39 +191,18 @@
 
 
       <!-- ==================== AQUÍ MÓDULO 3: BASE DE DATOS Y RECOMENDADOR ALEATORIO ==================== -->
-      <div id="database-card" class="card hidden">
-        <h2>Base de Datos y Sugeridor</h2>
-
-        <!-- Opción A: Búsqueda Rápida de Alimentos -->
-        <div class="db-section">
-          <h3>Buscador Rápido de Alimentos</h3>
-          <div class="form-group">
-            <label for="db-select">Selecciona un alimento predeterminado:</label>
-            <select id="db-select">
-              <option value="">-- Selecciona un alimento --</option>
-            </select>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="db-grams">Cantidad (gramos / porciones):</label>
-              <input type="number" id="db-grams" value="100" min="10" step="10">
-            </div>
-            <button type="button" id="btn-add-db" class="btn-secondary">+ Añadir a Registro</button>
-          </div>
-        </div>
-
-        <!-- Opción B: Recomendador de Menú -->
-        <div class="recommender-section">
-          <h3>¿Qué puedo comer con lo que me queda hoy?</h3>
-          <p class="small-text">Analiza tu cupo restante y busca una opción en tu base de datos.</p>
-          <button type="button" id="btn-recommend" class="btn-primary">🎲 Sugerir Plato Aleatorio</button>
-          
-          <div id="recommendation-result" class="recommendation-box hidden">
-            <!-- Aquí aparecerá la sugerencia de comida -->
-          </div>
-        </div>
-      </div>
+     <!-- ==================== MÓDULO 3: BUSCADOR INTELIGENTE (API) ==================== -->
+<div id="database-card" class="card hidden">
+  <h2>Buscador de Alimentos</h2>
+  
+  <div class="db-section">
+    <div class="form-group relative">
+      <label for="api-search">Buscar alimento en línea:</label>
+      <input type="text" id="api-search" placeholder="Ej: Brownie, Pechuga, Arepa, Guayanés..." autocomplete="off">
+      <ul id="api-results" class="autocomplete-list hidden"></ul>
+    </div>
+  </div>
+</div>
       <!-- ==================== FIN MÓDULO 3 ==================== -->
 
 
