@@ -218,3 +218,40 @@ input:focus, select:focus { border-color: var(--primary); }
   .food-search-results { max-height: 260px; }
   .food-search-result { padding: 10px 8px; }
 }
+.relative { 
+  position: relative; 
+}
+
+.autocomplete-list {
+  position: absolute;
+  top: 100%; 
+  left: 0; 
+  right: 0;
+  background: var(--card-bg);
+  border: 1px solid #334155;
+  border-radius: 8px;
+  list-style: none;
+  padding: 0; 
+  margin: 5px 0 0 0;
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 50;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+.autocomplete-list li {
+  padding: 12px;
+  border-bottom: 1px solid #334155;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.autocomplete-list li:hover { 
+  background: #0f172a; 
+  color: var(--primary); 
+}
+
+.autocomplete-list li:last-child { 
+  border-bottom: none; 
+}
