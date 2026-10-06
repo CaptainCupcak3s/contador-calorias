@@ -1,6 +1,6 @@
 // Variables Globales de Estado
-let dailyTargets = { cal: 0, pro: 0, fat: 0, carb: 0 };
-let consumed = { cal: 0, pro: 0, fat: 0, carb: 0 };
+let dailyTargets = { cal: 0, pro: 0, fat: 0, carb: 0, water: 0 };
+let consumed = { cal: 0, pro: 0, fat: 0, carb: 0, water: 0 };
 let foodEntries = [];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,16 +8,18 @@ document.addEventListener('DOMContentLoaded', () => {
   registerServiceWorker();
 });
 
-// 1. CALCULADORA DE METAS
+// 1. CALCULADORA DE METAS Y RUTINA
 document.getElementById('tdee-form').addEventListener('submit', (e) => {
-  e.preventDefault(); // Esta es la línea que evita el reinicio rápido
+  e.preventDefault(); // Evita que la página se reinicie
 
   const gender = document.querySelector('input[name="gender"]:checked').value;
   const age = parseFloat(document.getElementById('age').value);
   const weight = parseFloat(document.getElementById('weight').value);
   const height = parseFloat(document.getElementById('height').value);
   const steps = parseFloat(document.getElementById('steps').value) || 0;
-  const workoutKcal = parseFloat(document.getElementById('workout').value) || 0;
+  
+  // Captura las calorías de la rutina seleccionada
+  const workoutKcal = parseFloat(document.getElementById('workout-day').value) || 0;
   const deficitPercent = parseFloat(document.getElementById('deficit-percent').value);
 
   // Fórmula Mifflin-St Jeor
@@ -34,6 +36,9 @@ document.getElementById('tdee-form').addEventListener('submit', (e) => {
   let carbKcal = dailyTargets.cal - ((dailyTargets.pro * 4) + (dailyTargets.fat * 9));
   dailyTargets.carb = Math.round(Math.max(carbKcal / 4, 0));
 
+  // Meta de agua: 35ml por cada kg de peso corporal
+  dailyTargets.water = Math.round(weight * 35);
+
   updateTargetUI();
   showAppCards();
   saveData();
@@ -44,34 +49,69 @@ function updateTargetUI() {
   document.getElementById('protein-val').innerText = `${dailyTargets.pro}g`;
   document.getElementById('fat-val').innerText = `${dailyTargets.fat}g`;
   document.getElementById('carb-val').innerText = `${dailyTargets.carb}g`;
+  
+  document.getElementById('water-target-text').innerText = `${dailyTargets.water} ml`;
+  document.getElementById('water-consumed-text').innerText = consumed.water;
+  
   updateProgressBars();
 }
 
 function showAppCards() {
   document.getElementById('results-card').classList.remove('hidden');
+  document.getElementById('water-card').classList.remove('hidden');
   document.getElementById('database-card').classList.remove('hidden');
   document.getElementById('tracking-card').classList.remove('hidden');
   document.getElementById('controls-card').classList.remove('hidden');
 }
 
-// 2. BASE DE DATOS LOCAL DE RESGUARDO Y BUSCADOR HÍBRIDO
+// 2. BASE DE DATOS LOCAL AMPLIADA
 const LOCAL_FOOD_DATABASE = [
-  { name: "Pechuga de pollo (cocida)", kcals: 165, pro: 31, fat: 3.6, carb: 0 },
-  { name: "Arroz blanco (cocido)", kcals: 130, pro: 2.7, fat: 0.3, carb: 28 },
-  { name: "Huevo entero", kcals: 155, pro: 13, fat: 11, carb: 1.1 },
-  { name: "Avena en hojuelas", kcals: 389, pro: 16.9, fat: 6.9, carb: 66 },
-  { name: "Carne de res magra", kcals: 250, pro: 26, fat: 15, carb: 0 },
-  { name: "Queso Guayanés / Paisa", kcals: 290, pro: 18, fat: 22, carb: 2 },
-  { name: "Arepa de maíz (asada)", kcals: 215, pro: 4.5, fat: 1.5, carb: 45 },
-  { name: "Plátano maduro (hervido/asado)", kcals: 116, pro: 1.2, fat: 0.3, carb: 28 },
-  { name: "Papa cocida", kcals: 87, pro: 1.9, fat: 0.1, carb: 20 },
+  // Carnes y Proteínas
+  { name: "Pechuga de pollo (cocida/plancha)", kcals: 165, pro: 31, fat: 3.6, carb: 0 },
+  { name: "Carne de res magra (esmechada/molida)", kcals: 250, pro: 26, fat: 15, carb: 0 },
+  { name: "Bistec de res (plancha)", kcals: 271, pro: 25, fat: 19, carb: 0 },
+  { name: "Chuleta de cerdo (sin grasa)", kcals: 197, pro: 24, fat: 10, carb: 0 },
   { name: "Atún en lata (en agua)", kcals: 116, pro: 26, fat: 1, carb: 0 },
-  { name: "Pasta cocida", kcals: 158, pro: 5.8, fat: 0.9, carb: 31 },
-  { name: "Pan de molde integral", kcals: 247, pro: 9, fat: 3.5, carb: 41 },
-  { name: "Mantequilla de maní", kcals: 588, pro: 25, fat: 50, carb: 20 },
+  { name: "Huevo entero (hervido/frito sin aceite)", kcals: 155, pro: 13, fat: 11, carb: 1.1 },
+  { name: "Claras de huevo", kcals: 52, pro: 11, fat: 0.2, carb: 0.7 },
+  
+  // Carbohidratos base
+  { name: "Arroz blanco (cocido)", kcals: 130, pro: 2.7, fat: 0.3, carb: 28 },
+  { name: "Pasta (cocida)", kcals: 158, pro: 5.8, fat: 0.9, carb: 31 },
+  { name: "Avena en hojuelas", kcals: 389, pro: 16.9, fat: 6.9, carb: 66 },
+  { name: "Papa (hervida/horneada)", kcals: 87, pro: 1.9, fat: 0.1, carb: 20 },
+  { name: "Plátano maduro (horneado/asado)", kcals: 116, pro: 1.2, fat: 0.3, carb: 28 },
+  { name: "Plátano maduro (frito en tajadas)", kcals: 250, pro: 1.5, fat: 12, carb: 35 },
+  { name: "Caraotas negras (cocidas)", kcals: 132, pro: 8.9, fat: 0.5, carb: 23 },
+  { name: "Lentejas (cocidas)", kcals: 116, pro: 9, fat: 0.4, carb: 20 },
+  
+  // Panadería, Harinas y Frituras
+  { name: "Arepa (Harina P.A.N. asada, 1 mediana)", kcals: 215, pro: 4.5, fat: 1.5, carb: 45 },
+  { name: "Empanada de carne mechada (frita, 1 unidad)", kcals: 310, pro: 12, fat: 16, carb: 30 },
+  { name: "Empanada de pollo (frita, 1 unidad)", kcals: 290, pro: 14, fat: 14, carb: 28 },
+  { name: "Empanada de queso (frita, 1 unidad)", kcals: 320, pro: 10, fat: 18, carb: 29 },
+  { name: "Pan canilla (1/2 canilla aprox 100g)", kcals: 275, pro: 9, fat: 2.5, carb: 53 },
+  { name: "Pan campesino (1 rebanada grande 50g)", kcals: 140, pro: 4.5, fat: 1.5, carb: 26 },
+  { name: "Pan de molde blanco (1 rebanada)", kcals: 75, pro: 2.5, fat: 1, carb: 14 },
+  { name: "Cachito de jamón (1 unidad mediana)", kcals: 380, pro: 12, fat: 18, carb: 40 },
+  { name: "Tequeño (frito, 1 unidad 30g)", kcals: 110, pro: 4, fat: 6, carb: 10 },
+  
+  // Lácteos y Grasas
+  { name: "Queso blanco duro rallado (Llanero)", kcals: 350, pro: 22, fat: 28, carb: 2 },
+  { name: "Queso Guayanés / Telita / Paisa", kcals: 290, pro: 18, fat: 22, carb: 2 },
+  { name: "Queso amarillo (Gouda/Pecorino)", kcals: 356, pro: 25, fat: 27, carb: 2 },
+  { name: "Jamón de pierna / espalda", kcals: 145, pro: 16, fat: 7, carb: 3 },
+  { name: "Mantequilla (con sal)", kcals: 717, pro: 0.8, fat: 81, carb: 0.1 },
+  { name: "Mantequilla de maní (sin azúcar)", kcals: 588, pro: 25, fat: 50, carb: 20 },
+  { name: "Leche entera", kcals: 61, pro: 3.2, fat: 3.3, carb: 4.8 },
   { name: "Leche descremada", kcals: 35, pro: 3.4, fat: 0.2, carb: 5 },
-  { name: "Yogurt griego natural", kcals: 97, pro: 10, fat: 4, carb: 4 },
-  { name: "Frijoles / Caraotas negras (cocidas)", kcals: 132, pro: 8.9, fat: 0.5, carb: 23 }
+  
+  // Bebidas y Snacks
+  { name: "Maltín (1 lata / 355ml)", kcals: 180, pro: 1, fat: 0, carb: 44 },
+  { name: "Refresco / Coca-Cola (1 vaso 250ml)", kcals: 105, pro: 0, fat: 0, carb: 26 },
+  { name: "Jugo de naranja natural (1 vaso)", kcals: 112, pro: 1.7, fat: 0.5, carb: 26 },
+  { name: "Cambur (Banana)", kcals: 89, pro: 1.1, fat: 0.3, carb: 23 },
+  { name: "Manzana", kcals: 52, pro: 0.3, fat: 0.2, carb: 14 }
 ];
 
 const searchInput = document.getElementById('api-search');
@@ -94,7 +134,6 @@ searchInput.addEventListener('input', (e) => {
 
     let foundProducts = [];
 
-    // Intentar buscar en internet
     try {
       const response = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=8`, {
         signal: AbortSignal.timeout(4000)
@@ -118,7 +157,6 @@ searchInput.addEventListener('input', (e) => {
       console.warn("API no disponible, usando base local...");
     }
 
-    // Buscar en la lista de resguardo si internet falló o no encontró nada
     if (foundProducts.length === 0) {
       const filteredLocal = LOCAL_FOOD_DATABASE.filter(item => item.name.toLowerCase().includes(query));
       filteredLocal.forEach(item => {
@@ -129,7 +167,7 @@ searchInput.addEventListener('input', (e) => {
     resultsList.innerHTML = '';
 
     if (foundProducts.length === 0) {
-      resultsList.innerHTML = '<li>No se encontró el alimento.</li>';
+      resultsList.innerHTML = '<li>No se encontró el alimento. Intenta escribirlo diferente.</li>';
       return;
     }
 
@@ -139,7 +177,7 @@ searchInput.addEventListener('input', (e) => {
       li.innerHTML = `<strong>${product.name}</strong>${badge}<br><small style="color:#94a3b8">${product.kcals} kcal | P: ${product.pro}g | G: ${product.fat}g | C: ${product.carb}g (por 100g)</small>`;
       
       li.onclick = () => {
-        const grams = prompt(`¿Cuántos gramos de "${product.name}" consumiste?`, "100");
+        const grams = prompt(`¿Cuántos gramos de "${product.name}" consumiste? (1 empanada/cachito = 100g aprox)`, "100");
         if (grams && !isNaN(grams) && grams > 0) {
           const factor = parseFloat(grams) / 100;
           addFoodEntry(
@@ -159,7 +197,7 @@ searchInput.addEventListener('input', (e) => {
   }, 350);
 });
 
-// 3. REGISTRO DIARIO Y UI
+// 3. REGISTRO DE ALIMENTOS Y AGUA
 function addFoodEntry(name, cal, pro, fat, carb) {
   const item = { id: Date.now(), name, cal, pro, fat, carb };
   foodEntries.push(item);
@@ -182,6 +220,12 @@ function removeFoodEntry(id) {
     saveData();
   }
 }
+
+document.getElementById('btn-add-water').addEventListener('click', () => {
+  consumed.water += 250;
+  document.getElementById('water-consumed-text').innerText = consumed.water;
+  saveData();
+});
 
 function renderFoodList() {
   const list = document.getElementById('food-list');
@@ -221,9 +265,10 @@ function updateProgressBars() {
 
 // 4. PERSISTENCIA Y REINICIO
 document.getElementById('btn-reset-day').addEventListener('click', () => {
-  if (confirm("¿Seguro que deseas vaciar tu registro de hoy?")) {
-    consumed = { cal: 0, pro: 0, fat: 0, carb: 0 };
+  if (confirm("¿Seguro que deseas vaciar tu registro de hoy (alimentos y agua)?")) {
+    consumed = { cal: 0, pro: 0, fat: 0, carb: 0, water: 0 };
     foodEntries = [];
+    document.getElementById('water-consumed-text').innerText = "0";
     renderFoodList();
     updateProgressBars();
     saveData();
@@ -242,12 +287,17 @@ function loadSavedData() {
 
   if (data.dailyTargets && data.dailyTargets.cal > 0) {
     dailyTargets = data.dailyTargets;
+    if (!dailyTargets.water) dailyTargets.water = 2500; 
     updateTargetUI();
     showAppCards();
   }
 
   if (data.date === new Date().toDateString()) {
-    if (data.consumed) consumed = data.consumed;
+    if (data.consumed) {
+      consumed = data.consumed;
+      if (!consumed.water) consumed.water = 0;
+      document.getElementById('water-consumed-text').innerText = consumed.water;
+    }
     if (data.foodEntries) {
       foodEntries = data.foodEntries;
       renderFoodList();
