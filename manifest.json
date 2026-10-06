@@ -1,19 +1,20 @@
 {
-  "name": "Control Calórico Fit",
+  "name": "MacroControl Fit",
   "short_name": "MacroControl",
+  "description": "Asistente inteligente de nutrición y macros",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
-  "description": "Calculadora de TDEE, déficit calórico y diario de alimentos offline.",
+  "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/1046/1046857.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/1046/1046857.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
