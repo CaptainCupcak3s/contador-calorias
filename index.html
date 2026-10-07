@@ -105,31 +105,49 @@
       <button id="btn-add-water" class="btn-water">+ Añadir 250ml (1 Vaso)</button>
     </div>
 
-    <!-- BUSCADOR -->
+    <!-- BUSCADOR CON PORCIONES -->
     <div class="card hidden" id="database-card">
       <h2>🔍 Buscar Alimento</h2>
-      <input type="text" id="api-search" placeholder="Ej: Pechuga de pollo, Arepa, Pan canilla..." autocomplete="off">
+      <input type="text" id="api-search" placeholder="Ej: Pan Andino, Doritos, Pechuga..." autocomplete="off">
       <ul id="api-results" class="results-list hidden"></ul>
+
+      <div id="portionContainer" class="hidden" style="margin-top: 15px;">
+        <div class="form-group">
+          <label for="portionSelect">Tipo de Porción:</label>
+          <select id="portionSelect"></select>
+        </div>
+        <div class="form-group">
+          <label for="quantityInput">Cantidad (Ej: 2 rebanadas, o 150 gramos):</label>
+          <input type="number" id="quantityInput" value="1" min="0.1" step="any">
+        </div>
+        
+        <div class="macro-results">
+          <div id="selectedFoodName" class="food-title" style="margin-bottom: 10px; text-align: center;">Alimento</div>
+          <div class="macros-grid">
+            <div class="macro-box"><span class="macro-label">Cal</span><span class="macro-val" id="calVal">0</span></div>
+            <div class="macro-box"><span class="macro-label">Prot</span><span class="macro-val" id="protVal">0g</span></div>
+            <div class="macro-box"><span class="macro-label">Grasa</span><span class="macro-val" id="fatVal">0g</span></div>
+            <div class="macro-box"><span class="macro-label">Carb</span><span class="macro-val" id="carbVal">0g</span></div>
+          </div>
+          <p style="font-size: 12px; text-align: center; margin-top: 10px; color: #94a3b8;">Peso total calculado: <b id="totalWeightVal">0g</b></p>
+          <button id="btn-add-food" class="btn-submit">➕ Añadir al Consumo</button>
+        </div>
+      </div>
     </div>
 
     <!-- REGISTRO Y PROGRESO -->
     <div class="card hidden" id="tracking-card">
       <h2>📊 Tu Progreso</h2>
-      
       <div class="progress-section">
         <div class="progress-header"><span>Calorías</span> <span id="cal-progress-text">0 / 0</span></div>
         <div class="progress-bg"><div class="progress-fill cal-fill" id="cal-bar"></div></div>
-
         <div class="progress-header"><span>Proteína</span> <span id="pro-progress-text">0 / 0</span></div>
         <div class="progress-bg"><div class="progress-fill pro-fill" id="pro-bar"></div></div>
-
         <div class="progress-header"><span>Grasas</span> <span id="fat-progress-text">0 / 0</span></div>
         <div class="progress-bg"><div class="progress-fill fat-fill" id="fat-bar"></div></div>
-
         <div class="progress-header"><span>Carbohidratos</span> <span id="carb-progress-text">0 / 0</span></div>
         <div class="progress-bg"><div class="progress-fill carb-fill" id="carb-bar"></div></div>
       </div>
-
       <h3 style="margin-top: 20px;">Consumo de hoy:</h3>
       <ul id="food-list" class="food-list"></ul>
     </div>
@@ -138,7 +156,6 @@
     <div class="card hidden" id="controls-card">
       <button id="btn-reset-day" class="btn-danger">Reiniciar Día</button>
     </div>
-
   </div>
   <script src="app.js"></script>
 </body>
