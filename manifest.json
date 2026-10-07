@@ -1,20 +1,13 @@
 {
-  "name": "MacroControl Fit",
-  "short_name": "MacroControl",
-  "description": "Asistente inteligente de nutrición y macros",
+  "name": "MacroControl Pro",
+  "short_name": "Macros",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
-  "orientation": "portrait-primary",
+  "background_color": "#0b1120",
+  "theme_color": "#0b1120",
   "icons": [
     {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/2965/2965306.png",
       "sizes": "512x512",
       "type": "image/png"
     }
