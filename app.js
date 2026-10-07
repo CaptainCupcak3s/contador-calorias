@@ -308,4 +308,3 @@ function loadSavedData() {
     saveData(); // Resetea si es un día nuevo
   }
 }
-
