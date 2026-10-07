@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>MacroControl V3</title>
+  <title>MacroControl Pro</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b1120">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
     
-    <!-- MÓDULO 1: DATOS FÍSICOS (Basado en tu captura) -->
+    <!-- MÓDULO: DATOS FÍSICOS -->
     <div class="card">
       <h2 class="card-title">Tus Datos Físicos</h2>
       <form id="tdee-form">
-        
         <div class="form-group">
           <label>Género Biológico</label>
           <div class="radio-group">
@@ -48,9 +49,8 @@
           </div>
         </div>
 
-        <!-- Botones rápidos para tu Split -->
         <div class="quick-workouts">
-          <span class="qw-label">Autocompletar entreno:</span>
+          <span class="qw-label">Rutina de hoy:</span>
           <button type="button" class="btn-qw" onclick="setWorkout(0)">Descanso</button>
           <button type="button" class="btn-qw" onclick="setWorkout(350)">Empuje / Tirón</button>
           <button type="button" class="btn-qw" onclick="setWorkout(450)">Piernas</button>
@@ -72,7 +72,7 @@
     </div>
 
     <div id="app-content" class="hidden">
-      <!-- MÓDULO 2: PROGRESO DIARIO -->
+      <!-- MÓDULO: PROGRESO -->
       <div class="card">
         <h2 class="card-title">Resumen Diario</h2>
         <div class="progress-container">
@@ -95,7 +95,7 @@
         </div>
       </div>
 
-      <!-- MÓDULO 3: HIDRATACIÓN MEJORADA -->
+      <!-- MÓDULO: HIDRATACIÓN -->
       <div class="card">
         <h2 class="card-title">Hidratación</h2>
         <div class="water-widget">
@@ -112,13 +112,12 @@
         </div>
       </div>
 
-      <!-- MÓDULO 4: BUSCADOR Y PORCIONES -->
+      <!-- MÓDULO: ALIMENTOS Y PORCIONES -->
       <div class="card">
         <h2 class="card-title">Añadir Alimento</h2>
-        <input type="text" id="search-input" placeholder="Buscar alimento (Ej: Arepa, Pollo, Eggs...)" autocomplete="off">
+        <input type="text" id="search-input" placeholder="Buscar alimento (Ej: Arepa, Pollo...)" autocomplete="off">
         <ul id="search-results" class="results-list hidden"></ul>
 
-        <!-- Calculadora de Porciones -->
         <div id="portion-calculator" class="portion-box hidden">
           <h3 id="preview-name" class="preview-title">Alimento</h3>
           
@@ -139,23 +138,33 @@
             <div><span class="pm-val" id="pm-fat">0g</span><span class="pm-lbl">Grasa</span></div>
             <div><span class="pm-val" id="pm-car">0g</span><span class="pm-lbl">Carb</span></div>
           </div>
-          <p class="total-weight">Peso total: <span id="pm-weight">0</span>g</p>
+          <p class="total-weight">Peso total de la ración: <span id="pm-weight">0</span>g</p>
           
-          <button id="btn-add-food" class="btn-primary" style="margin-top:10px;">Añadir al Diario</button>
+          <button id="btn-add-food" class="btn-primary" style="margin-top:15px;">Añadir al Diario</button>
         </div>
       </div>
 
-      <!-- MÓDULO 5: LISTA DE CONSUMO -->
+      <!-- MÓDULO: DIARIO -->
       <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
           <h2 class="card-title" style="margin:0; border:none;">Consumo de Hoy</h2>
-          <button onclick="resetDay()" class="btn-danger-small">Reiniciar Día</button>
+          <button onclick="resetDay()" class="btn-danger-small">Reiniciar</button>
         </div>
         <ul id="food-list" class="food-list"></ul>
       </div>
 
     </div>
   </div>
+
   <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').then(reg => {
+          reg.update(); // Fuerza a buscar la última versión en GitHub
+        });
+      });
+    }
+  </script>
 </body>
 </html>
