@@ -2,6 +2,7 @@
 let dailyTargets = { cal: 0, pro: 0, fat: 0, carb: 0, water: 0 };
 let consumed = { cal: 0, pro: 0, fat: 0, carb: 0, water: 0 };
 let foodEntries = [];
+let selectedFood = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   loadSavedData();
@@ -10,19 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 1. CALCULADORA DE METAS Y RUTINA
 document.getElementById('tdee-form').addEventListener('submit', (e) => {
-  e.preventDefault(); // Evita que la página se reinicie
+  e.preventDefault();
 
   const gender = document.querySelector('input[name="gender"]:checked').value;
   const age = parseFloat(document.getElementById('age').value);
   const weight = parseFloat(document.getElementById('weight').value);
   const height = parseFloat(document.getElementById('height').value);
   const steps = parseFloat(document.getElementById('steps').value) || 0;
-  
-  // Captura las calorías de la rutina seleccionada
   const workoutKcal = parseFloat(document.getElementById('workout-day').value) || 0;
   const deficitPercent = parseFloat(document.getElementById('deficit-percent').value);
 
-  // Fórmula Mifflin-St Jeor
   let bmr = (10 * weight) + (6.25 * height) - (5 * age);
   bmr = gender === 'male' ? bmr + 5 : bmr - 161;
 
@@ -35,8 +33,6 @@ document.getElementById('tdee-form').addEventListener('submit', (e) => {
   
   let carbKcal = dailyTargets.cal - ((dailyTargets.pro * 4) + (dailyTargets.fat * 9));
   dailyTargets.carb = Math.round(Math.max(carbKcal / 4, 0));
-
-  // Meta de agua: 35ml por cada kg de peso corporal
   dailyTargets.water = Math.round(weight * 35);
 
   updateTargetUI();
@@ -49,10 +45,8 @@ function updateTargetUI() {
   document.getElementById('protein-val').innerText = `${dailyTargets.pro}g`;
   document.getElementById('fat-val').innerText = `${dailyTargets.fat}g`;
   document.getElementById('carb-val').innerText = `${dailyTargets.carb}g`;
-  
   document.getElementById('water-target-text').innerText = `${dailyTargets.water} ml`;
   document.getElementById('water-consumed-text').innerText = consumed.water;
-  
   updateProgressBars();
 }
 
@@ -64,63 +58,40 @@ function showAppCards() {
   document.getElementById('controls-card').classList.remove('hidden');
 }
 
-// 2. BASE DE DATOS LOCAL AMPLIADA
+// 2. BASE DE DATOS LOCAL CON PORCIONES Y MACROS POR GRAMO
 const LOCAL_FOOD_DATABASE = [
-  // Carnes y Proteínas
-  { name: "Pechuga de pollo (cocida/plancha)", kcals: 165, pro: 31, fat: 3.6, carb: 0 },
-  { name: "Carne de res magra (esmechada/molida)", kcals: 250, pro: 26, fat: 15, carb: 0 },
-  { name: "Bistec de res (plancha)", kcals: 271, pro: 25, fat: 19, carb: 0 },
-  { name: "Chuleta de cerdo (sin grasa)", kcals: 197, pro: 24, fat: 10, carb: 0 },
-  { name: "Atún en lata (en agua)", kcals: 116, pro: 26, fat: 1, carb: 0 },
-  { name: "Huevo entero (hervido/frito sin aceite)", kcals: 155, pro: 13, fat: 11, carb: 1.1 },
-  { name: "Claras de huevo", kcals: 52, pro: 11, fat: 0.2, carb: 0.7 },
+  // Panes y Arepas
+  { name: "Pan Andino (Sweet Andean Bread)", macrosPerGram: { cal: 3.2, prot: 0.08, fat: 0.07, carb: 0.55 }, portions: [ { label: "Gramos (g)", weightInGrams: 1 }, { label: "1 Unidad estándar (80g)", weightInGrams: 80 }, { label: "1 Unidad grande (120g)", weightInGrams: 120 } ] },
+  { name: "Pan Piñita (Sweet Bread Roll)", macrosPerGram: { cal: 3.5, prot: 0.07, fat: 0.09, carb: 0.60 }, portions: [ { label: "Gramos (g)", weightInGrams: 1 }, { label: "1 Piñita pequeña (40g)", weightInGrams: 40 }, { label: "1 Piñita grande (80g)", weightInGrams: 80 } ] },
+  { name: "Pan Canilla (Baguette venezolana)", macrosPerGram: { cal: 2.75, prot: 0.09, fat: 0.02, carb: 0.53 }, portions: [ { label: "Gramos (g)", weightInGrams: 1 }, { label: "1/2 Canilla (100g)", weightInGrams: 100 }, { label: "1 Canilla entera (200g)", weightInGrams: 200 } ] },
+  { name: "Pan de Molde / Rebanada Bimbo", macrosPerGram: { cal: 2.6, prot: 0.09, fat: 0.03, carb: 0.50 }, portions: [ { label: "Gramos (g)", weightInGrams: 1 }, { label: "1 Rebanada (28g)", weightInGrams: 28 }, { label: "2 Rebanadas (56g)", weightInGrams: 56 } ] },
+  { name: "Arepa Asada (Harina P.A.N.)", macrosPerGram: { cal: 2.15, prot: 0.04, fat: 0.01, carb: 0.45 }, portions: [ { label: "Gramos (g)", weightInGrams: 1 }, { label: "1 Arepa mediana (100g)", weightInGrams: 100 }, { label: "1 Arepa grande (150g)", weightInGrams: 150 } ] },
   
-  // Carbohidratos base
-  { name: "Arroz blanco (cocido)", kcals: 130, pro: 2.7, fat: 0.3, carb: 28 },
-  { name: "Pasta (cocida)", kcals: 158, pro: 5.8, fat: 0.9, carb: 31 },
-  { name: "Avena en hojuelas", kcals: 389, pro: 16.9, fat: 6.9, carb: 66 },
-  { name: "Papa (hervida/horneada)", kcals: 87, pro: 1.9, fat: 0.1, carb: 20 },
-  { name: "Plátano maduro (horneado/asado)", kcals: 116, pro: 1.2, fat: 0.3, carb: 28 },
-  { name: "Plátano maduro (frito en tajadas)", kcals: 250, pro: 1.5, fat: 12, carb: 35 },
-  { name: "Caraotas negras (cocidas)", kcals: 132, pro: 8.9, fat: 0.5, carb: 23 },
-  { name: "Lentejas (cocidas)", kcals: 116, pro: 9, fat: 0.4, carb: 20 },
+  // Huevos y Proteínas
+  { name: "Huevo Entero / Whole Egg", macrosPerGram: { cal: 1.43, prot: 0.13, fat: 0.10, carb: 0.01 }, portions: [ { label: "Gramos (g)", weightInGrams: 1 }, { label: "1 Unidad Mediana (44g)", weightInGrams: 44 }, { label: "1 Unidad Grande (50g)", weightInGrams: 50 } ] },
+  { name: "Revoltillo de Huevos / Scrambled Eggs", macrosPerGram: { cal: 1.49, prot: 0.10, fat: 0.11, carb: 0.01 }, portions: [ { label: "Gramos (g)", weightInGrams: 1 }, { label: "1 Taza (110g)", weightInGrams: 110 }, { label: "1 Cucharada grande (30g)", weightInGrams: 30 } ] },
+  { name: "Pechuga de Pollo / Chicken Breast (Cocida)", macrosPerGram: { cal: 1.65, prot: 0.31, fat: 0.03, carb: 0.0 }, portions: [ { label: "Gramos (g)", weightInGrams: 1 }, { label: "1 Filete mediano (150g)", weightInGrams: 150 }, { label: "1 Taza desmenuzado (125g)", weightInGrams: 125 } ] },
+  { name: "Carne de Res Molida/Esmechada (Magra)", macrosPerGram: { cal: 2.50, prot: 0.26, fat: 0.15, carb: 0.0 }, portions: [ { label: "Gramos (g)", weightInGrams: 1 }, { label: "1 Taza (150g)", weightInGrams: 150 }, { label: "1 Cucharada sopera (20g)", weightInGrams: 20 } ] },
   
-  // Panadería, Harinas y Frituras
-  { name: "Arepa (Harina P.A.N. asada, 1 mediana)", kcals: 215, pro: 4.5, fat: 1.5, carb: 45 },
-  { name: "Empanada de carne mechada (frita, 1 unidad)", kcals: 310, pro: 12, fat: 16, carb: 30 },
-  { name: "Empanada de pollo (frita, 1 unidad)", kcals: 290, pro: 14, fat: 14, carb: 28 },
-  { name: "Empanada de queso (frita, 1 unidad)", kcals: 320, pro: 10, fat: 18, carb: 29 },
-  { name: "Pan canilla (1/2 canilla aprox 100g)", kcals: 275, pro: 9, fat: 2.5, carb: 53 },
-  { name: "Pan campesino (1 rebanada grande 50g)", kcals: 140, pro: 4.5, fat: 1.5, carb: 26 },
-  { name: "Pan de molde blanco (1 rebanada)", kcals: 75, pro: 2.5, fat: 1, carb: 14 },
-  { name: "Cachito de jamón (1 unidad mediana)", kcals: 380, pro: 12, fat: 18, carb: 40 },
-  { name: "Tequeño (frito, 1 unidad 30g)", kcals: 110, pro: 4, fat: 6, carb: 10 },
-  
-  // Lácteos y Grasas
-  { name: "Queso blanco duro rallado (Llanero)", kcals: 350, pro: 22, fat: 28, carb: 2 },
-  { name: "Queso Guayanés / Telita / Paisa", kcals: 290, pro: 18, fat: 22, carb: 2 },
-  { name: "Queso amarillo (Gouda/Pecorino)", kcals: 356, pro: 25, fat: 27, carb: 2 },
-  { name: "Jamón de pierna / espalda", kcals: 145, pro: 16, fat: 7, carb: 3 },
-  { name: "Mantequilla (con sal)", kcals: 717, pro: 0.8, fat: 81, carb: 0.1 },
-  { name: "Mantequilla de maní (sin azúcar)", kcals: 588, pro: 25, fat: 50, carb: 20 },
-  { name: "Leche entera", kcals: 61, pro: 3.2, fat: 3.3, carb: 4.8 },
-  { name: "Leche descremada", kcals: 35, pro: 3.4, fat: 0.2, carb: 5 },
-  
-  // Bebidas y Snacks
-  { name: "Maltín (1 lata / 355ml)", kcals: 180, pro: 1, fat: 0, carb: 44 },
-  { name: "Refresco / Coca-Cola (1 vaso 250ml)", kcals: 105, pro: 0, fat: 0, carb: 26 },
-  { name: "Jugo de naranja natural (1 vaso)", kcals: 112, pro: 1.7, fat: 0.5, carb: 26 },
-  { name: "Cambur (Banana)", kcals: 89, pro: 1.1, fat: 0.3, carb: 23 },
-  { name: "Manzana", kcals: 52, pro: 0.3, fat: 0.2, carb: 14 }
+  // Acompañantes y Lácteos
+  { name: "Arroz Blanco / White Rice (Cocido)", macrosPerGram: { cal: 1.30, prot: 0.02, fat: 0.0, carb: 0.28 }, portions: [ { label: "Gramos (g)", weightInGrams: 1 }, { label: "1 Taza (150g)", weightInGrams: 150 }, { label: "1/2 Taza (75g)", weightInGrams: 75 } ] },
+  { name: "Queso Blanco Rallado (Llanero/Duro)", macrosPerGram: { cal: 3.50, prot: 0.22, fat: 0.28, carb: 0.02 }, portions: [ { label: "Gramos (g)", weightInGrams: 1 }, { label: "1 Cucharada colmada (15g)", weightInGrams: 15 }, { label: "1 Taza (100g)", weightInGrams: 100 } ] }
 ];
 
+// 3. BUSCADOR Y SISTEMA DE PORCIONES DINÁMICO
 const searchInput = document.getElementById('api-search');
 const resultsList = document.getElementById('api-results');
+const portionContainer = document.getElementById('portionContainer');
+const portionSelect = document.getElementById('portionSelect');
+const quantityInput = document.getElementById('quantityInput');
 let searchDebounce;
 
 searchInput.addEventListener('input', (e) => {
   clearTimeout(searchDebounce);
   const query = e.target.value.trim().toLowerCase();
+  
+  portionContainer.classList.add('hidden'); // Ocultar panel si el usuario vuelve a buscar
+  selectedFood = null;
 
   if (query.length < 2) {
     resultsList.innerHTML = '';
@@ -129,27 +100,50 @@ searchInput.addEventListener('input', (e) => {
   }
 
   searchDebounce = setTimeout(async () => {
-    resultsList.innerHTML = '<li>🔍 Buscando alimento...</li>';
+    resultsList.innerHTML = '<li style="text-align:center;">🔍 Buscando alimento...</li>';
     resultsList.classList.remove('hidden');
 
     let foundProducts = [];
 
+    // Búsqueda en API OpenFoodFacts
     try {
-      const response = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=8`, {
+      const response = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=6`, {
         signal: AbortSignal.timeout(4000)
       });
       const data = await response.json();
       
       if (data.products && data.products.length > 0) {
         data.products.forEach(product => {
-          const name = product.product_name_es || product.product_name || 'Alimento';
-          const kcals = Math.round(product.nutriments['energy-kcal_100g'] || 0);
-          const pro = Math.round(product.nutriments['proteins_100g'] || 0);
-          const fat = Math.round(product.nutriments['fat_100g'] || 0);
-          const carb = Math.round(product.nutriments['carbohydrates_100g'] || 0);
+          const name = product.product_name_es || product.product_name || 'Alimento API';
+          // Convertimos la base de 100g de la API a macros por gramo
+          const kcals = (product.nutriments['energy-kcal_100g'] || 0) / 100;
+          const pro = (product.nutriments['proteins_100g'] || 0) / 100;
+          const fat = (product.nutriments['fat_100g'] || 0) / 100;
+          const carb = (product.nutriments['carbohydrates_100g'] || 0) / 100;
 
           if (kcals > 0) {
-            foundProducts.push({ name, kcals, pro, fat, carb, source: 'api' });
+            let dynamicPortions = [ { label: "Gramos (g)", weightInGrams: 1 } ];
+
+            // Extraer empaques de la API para la calle
+            if (product.serving_quantity) {
+              dynamicPortions.push({ label: `Porción sugerida (${parseFloat(product.serving_quantity)}g/ml)`, weightInGrams: parseFloat(product.serving_quantity) });
+            }
+            if (product.product_quantity) {
+              dynamicPortions.push({ label: `Empaque completo (${parseFloat(product.product_quantity)}g/ml)`, weightInGrams: parseFloat(product.product_quantity) });
+            }
+            // Salvavidas si la API no dice el peso
+            if (!product.serving_quantity && !product.product_quantity) {
+              dynamicPortions.push({ label: "Snack pequeño (30g)", weightInGrams: 30 });
+              dynamicPortions.push({ label: "Porción estándar (50g)", weightInGrams: 50 });
+              dynamicPortions.push({ label: "Empaque grande / Bebida (350g/ml)", weightInGrams: 350 });
+            }
+
+            foundProducts.push({ 
+              name, 
+              macrosPerGram: { cal: kcals, prot: pro, fat: fat, carb: carb }, 
+              portions: dynamicPortions, 
+              source: 'api' 
+            });
           }
         });
       }
@@ -157,47 +151,94 @@ searchInput.addEventListener('input', (e) => {
       console.warn("API no disponible, usando base local...");
     }
 
-    if (foundProducts.length === 0) {
-      const filteredLocal = LOCAL_FOOD_DATABASE.filter(item => item.name.toLowerCase().includes(query));
-      filteredLocal.forEach(item => {
-        foundProducts.push({ ...item, source: 'local' });
-      });
-    }
+    // Búsqueda Local
+    const filteredLocal = LOCAL_FOOD_DATABASE.filter(item => item.name.toLowerCase().includes(query));
+    filteredLocal.forEach(item => {
+      foundProducts.push({ ...item, source: 'local' });
+    });
 
     resultsList.innerHTML = '';
-
     if (foundProducts.length === 0) {
-      resultsList.innerHTML = '<li>No se encontró el alimento. Intenta escribirlo diferente.</li>';
+      resultsList.innerHTML = '<li>No se encontró el alimento. Escribe otro nombre.</li>';
       return;
     }
 
     foundProducts.forEach(product => {
       const li = document.createElement('li');
       const badge = product.source === 'local' ? ' 🏠' : ' 🌐';
-      li.innerHTML = `<strong>${product.name}</strong>${badge}<br><small style="color:#94a3b8">${product.kcals} kcal | P: ${product.pro}g | G: ${product.fat}g | C: ${product.carb}g (por 100g)</small>`;
+      li.innerHTML = `<strong>${product.name}</strong>${badge}`;
       
       li.onclick = () => {
-        const grams = prompt(`¿Cuántos gramos de "${product.name}" consumiste? (1 empanada/cachito = 100g aprox)`, "100");
-        if (grams && !isNaN(grams) && grams > 0) {
-          const factor = parseFloat(grams) / 100;
-          addFoodEntry(
-            `${product.name} (${grams}g)`,
-            Math.round(product.kcals * factor),
-            Math.round(product.pro * factor),
-            Math.round(product.fat * factor),
-            Math.round(product.carb * factor)
-          );
-          searchInput.value = '';
-          resultsList.classList.add('hidden');
-        }
+        selectFood(product);
       };
       resultsList.appendChild(li);
     });
 
-  }, 350);
+  }, 400);
 });
 
-// 3. REGISTRO DE ALIMENTOS Y AGUA
+function selectFood(food) {
+  selectedFood = food;
+  searchInput.value = food.name;
+  resultsList.classList.add('hidden');
+  
+  portionSelect.innerHTML = '';
+  food.portions.forEach(portion => {
+    const option = document.createElement('option');
+    option.value = portion.weightInGrams;
+    option.textContent = portion.label;
+    portionSelect.appendChild(option);
+  });
+
+  document.getElementById('selectedFoodName').textContent = food.name;
+  quantityInput.value = 1;
+  portionContainer.classList.remove('hidden');
+  
+  calculateMacros();
+}
+
+portionSelect.addEventListener('change', calculateMacros);
+quantityInput.addEventListener('input', calculateMacros);
+
+function calculateMacros() {
+  if (!selectedFood) return;
+
+  const weightPerUnit = parseFloat(portionSelect.value);
+  const quantity = parseFloat(quantityInput.value) || 0;
+  const totalGrams = weightPerUnit * quantity;
+  
+  const cals = Math.round(selectedFood.macrosPerGram.cal * totalGrams);
+  const prot = Math.round(selectedFood.macrosPerGram.prot * totalGrams);
+  const fat = Math.round(selectedFood.macrosPerGram.fat * totalGrams);
+  const carb = Math.round(selectedFood.macrosPerGram.carb * totalGrams);
+
+  document.getElementById('calVal').textContent = cals;
+  document.getElementById('protVal').textContent = prot + 'g';
+  document.getElementById('fatVal').textContent = fat + 'g';
+  document.getElementById('carbVal').textContent = carb + 'g';
+  document.getElementById('totalWeightVal').textContent = totalGrams.toFixed(1) + 'g';
+}
+
+document.getElementById('btn-add-food').addEventListener('click', () => {
+  if (!selectedFood) return;
+  
+  const totalGrams = parseFloat(portionSelect.value) * (parseFloat(quantityInput.value) || 0);
+  if (totalGrams <= 0) return;
+
+  const cal = Math.round(selectedFood.macrosPerGram.cal * totalGrams);
+  const pro = Math.round(selectedFood.macrosPerGram.prot * totalGrams);
+  const fat = Math.round(selectedFood.macrosPerGram.fat * totalGrams);
+  const carb = Math.round(selectedFood.macrosPerGram.carb * totalGrams);
+
+  addFoodEntry(`${selectedFood.name} (${totalGrams.toFixed(0)}g)`, cal, pro, fat, carb);
+  
+  // Resetear UI
+  portionContainer.classList.add('hidden');
+  searchInput.value = '';
+  selectedFood = null;
+});
+
+// 4. REGISTRO ALIMENTOS, AGUA Y BARRAS
 function addFoodEntry(name, cal, pro, fat, carb) {
   const item = { id: Date.now(), name, cal, pro, fat, carb };
   foodEntries.push(item);
@@ -263,9 +304,9 @@ function updateProgressBars() {
   setBar('carb-bar', 'carb-progress-text', consumed.carb, dailyTargets.carb);
 }
 
-// 4. PERSISTENCIA Y REINICIO
+// 5. PERSISTENCIA EN MEMORIA
 document.getElementById('btn-reset-day').addEventListener('click', () => {
-  if (confirm("¿Seguro que deseas vaciar tu registro de hoy (alimentos y agua)?")) {
+  if (confirm("¿Seguro que deseas vaciar tu registro de hoy?")) {
     consumed = { cal: 0, pro: 0, fat: 0, carb: 0, water: 0 };
     foodEntries = [];
     document.getElementById('water-consumed-text').innerText = "0";
@@ -308,9 +349,10 @@ function loadSavedData() {
   }
 }
 
-// 5. SERVICE WORKER
+// 6. SERVICE WORKER
 function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(err => console.error(err));
   }
 }
+
