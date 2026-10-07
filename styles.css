@@ -1,67 +1,72 @@
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
-
-body { background-color: #0f172a; color: #f8fafc; padding: 15px; line-height: 1.5; }
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+body { background-color: #0b1120; color: #f8fafc; padding: 20px 10px; }
 .container { max-width: 500px; margin: 0 auto; }
-header { text-align: center; margin-bottom: 20px; }
-header h1 { color: #38bdf8; font-size: 26px; }
-header p { color: #94a3b8; font-size: 14px; }
 
-.card { background-color: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5); }
-h2 { font-size: 18px; margin-bottom: 15px; color: #e2e8f0; border-bottom: 1px solid #334155; padding-bottom: 8px; }
+.card { background-color: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+.card-title { font-size: 18px; font-weight: 600; color: #f8fafc; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 15px; }
 
-.form-group { margin-bottom: 12px; }
-.form-row { display: flex; gap: 10px; }
-.row-group { display: flex; align-items: center; }
+.form-group { margin-bottom: 15px; width: 100%; }
+.form-row { display: flex; gap: 15px; }
+.grid-3 .form-group { width: 33.33%; }
+.grid-2 .form-group { width: 50%; }
 
-label { display: block; font-size: 13px; margin-bottom: 5px; color: #cbd5e1; }
-input[type="number"], input[type="text"], select {
-  width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155;
-  background-color: #0f172a; color: #f8fafc; font-size: 15px; outline: none;
+label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 6px; }
+input[type="number"], input[type="text"], select { 
+  width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155; 
+  background-color: #0f172a; color: #f8fafc; outline: none; font-size: 15px; transition: border 0.2s;
 }
-input:focus, select:focus { border-color: #38bdf8; }
+input:focus, select:focus { border-color: #3b82f6; }
 
-button {
-  width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 15px;
-  font-weight: bold; cursor: pointer; transition: opacity 0.2s;
-}
-button:active { opacity: 0.8; }
-.btn-submit { background-color: #38bdf8; color: #0f172a; }
-.btn-water { background-color: #0ea5e9; color: #fff; }
-.btn-danger { background-color: #ef4444; color: #fff; }
-.btn-delete { background-color: transparent; color: #ef4444; width: auto; padding: 5px; font-size: 16px; }
+.radio-group { display: flex; gap: 20px; background: #0f172a; padding: 10px; border-radius: 8px; border: 1px solid #334155; }
+.radio-group label { margin: 0; color: #f8fafc; display: flex; align-items: center; gap: 5px; cursor: pointer;}
+
+.btn-primary { width: 100%; padding: 14px; background-color: #3b82f6; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+.btn-primary:active { background-color: #2563eb; transform: scale(0.98); }
+
+/* Quick Workouts */
+.quick-workouts { margin-bottom: 15px; }
+.qw-label { font-size: 12px; color: #94a3b8; display: block; margin-bottom: 5px; }
+.btn-qw { background: #334155; color: #e2e8f0; border: none; padding: 6px 10px; border-radius: 6px; font-size: 12px; margin-right: 5px; margin-bottom: 5px; cursor: pointer; }
+.btn-qw:active { background: #3b82f6; color: #fff; }
+
+/* Progress Bars */
+.prog-item { margin-bottom: 12px; }
+.prog-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; color: #e2e8f0; }
+.prog-bar { width: 100%; height: 10px; background: #0f172a; border-radius: 5px; overflow: hidden; }
+.fill { height: 100%; transition: width 0.4s ease; border-radius: 5px; }
+.fill-cal { background: #3b82f6; } .fill-pro { background: #10b981; }
+.fill-fat { background: #f59e0b; } .fill-car { background: #8b5cf6; }
+.fill-water { background: #0ea5e9; }
+.danger { background: #ef4444 !important; }
+
+/* Water Widget */
+.water-widget { text-align: center; }
+.water-info { margin-bottom: 10px; }
+.water-big { font-size: 32px; font-weight: bold; color: #0ea5e9; }
+.water-target { font-size: 16px; color: #94a3b8; }
+.water-bar-container { height: 16px; margin-bottom: 15px; border: 1px solid #334155; }
+.water-controls { display: flex; gap: 10px; justify-content: center; }
+.water-controls button { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+.btn-water-minus { background: #334155; color: #fff; }
+.btn-water-plus { background: #0ea5e9; color: #fff; }
+
+/* Search & Portions */
+.results-list { list-style: none; background: #0f172a; border: 1px solid #334155; border-radius: 8px; max-height: 200px; overflow-y: auto; margin-top: 5px; }
+.results-list li { padding: 12px; border-bottom: 1px solid #334155; cursor: pointer; font-size: 14px; }
+.results-list li:active { background: #334155; }
+.portion-box { background: #0f172a; border: 1px solid #3b82f6; padding: 15px; border-radius: 8px; margin-top: 15px; }
+.preview-title { color: #3b82f6; text-align: center; margin-bottom: 15px; font-size: 16px; }
+.preview-macros { display: flex; justify-content: space-around; text-align: center; margin-top: 15px; padding: 10px; background: #1e293b; border-radius: 8px; }
+.pm-val { display: block; font-weight: bold; font-size: 16px; color: #f8fafc; }
+.pm-lbl { font-size: 11px; color: #94a3b8; }
+.total-weight { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 10px; }
+
+/* Food List */
+.food-list { list-style: none; }
+.food-list li { background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; }
+.food-name { font-weight: bold; font-size: 14px; display: block; margin-bottom: 4px;}
+.food-macs { font-size: 12px; color: #94a3b8; }
+.btn-del { background: transparent; border: none; color: #ef4444; font-size: 18px; cursor: pointer; padding: 5px; }
+.btn-danger-small { background: #ef4444; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
 
 .hidden { display: none !important; }
-.text-center { text-align: center; }
-
-/* Grillas */
-.macros-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-#results-card .macros-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.macro-box { background-color: #0f172a; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #334155; }
-.macro-label { display: block; font-size: 12px; color: #94a3b8; }
-.macro-val { display: block; font-size: 16px; font-weight: bold; color: #38bdf8; }
-
-/* Buscador y Panel Porciones */
-.results-list { list-style: none; margin-top: 10px; background-color: #0f172a; border-radius: 6px; border: 1px solid #334155; max-height: 220px; overflow-y: auto; }
-.results-list li { padding: 12px; border-bottom: 1px solid #334155; cursor: pointer; font-size: 14px; }
-.results-list li:hover { background-color: #38bdf8; color: #0f172a; }
-.macro-results { margin-top: 15px; padding: 15px; background-color: #1e293b; border: 1px solid #38bdf8; border-radius: 8px; }
-
-/* Agua */
-.water-display { font-size: 32px; margin: 15px 0; font-weight: bold; color: #38bdf8; }
-
-/* Tracking */
-.food-list { list-style: none; margin-top: 10px; }
-.food-list li { background-color: #0f172a; padding: 12px; border-radius: 6px; margin-bottom: 8px; border: 1px solid #334155; }
-.food-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-.food-title { font-weight: bold; font-size: 15px; color: #e2e8f0; }
-.food-details { font-size: 12px; color: #94a3b8; }
-
-/* Progreso */
-.progress-section { margin-top: 15px; }
-.progress-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; color: #cbd5e1; }
-.progress-bg { background-color: #0f172a; border-radius: 10px; height: 12px; width: 100%; margin-bottom: 12px; overflow: hidden; border: 1px solid #334155; }
-.progress-fill { height: 100%; border-radius: 10px; transition: width 0.3s ease; }
-.cal-fill { background-color: #38bdf8; } .pro-fill { background-color: #4ade80; }
-.fat-fill { background-color: #facc15; } .carb-fill { background-color: #c084fc; }
-.danger-fill { background-color: #ef4444 !important; }
-
