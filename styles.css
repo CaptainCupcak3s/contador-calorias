@@ -23,13 +23,11 @@ input:focus, select:focus { border-color: #3b82f6; }
 .btn-primary { width: 100%; padding: 14px; background-color: #3b82f6; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; }
 .btn-primary:active { background-color: #2563eb; transform: scale(0.98); }
 
-/* Quick Workouts */
 .quick-workouts { margin-bottom: 15px; }
-.qw-label { font-size: 12px; color: #94a3b8; display: block; margin-bottom: 5px; }
-.btn-qw { background: #334155; color: #e2e8f0; border: none; padding: 6px 10px; border-radius: 6px; font-size: 12px; margin-right: 5px; margin-bottom: 5px; cursor: pointer; }
+.qw-label { font-size: 12px; color: #94a3b8; display: block; margin-bottom: 8px; }
+.btn-qw { background: #334155; color: #e2e8f0; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; margin-right: 5px; margin-bottom: 5px; cursor: pointer; }
 .btn-qw:active { background: #3b82f6; color: #fff; }
 
-/* Progress Bars */
 .prog-item { margin-bottom: 12px; }
 .prog-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; color: #e2e8f0; }
 .prog-bar { width: 100%; height: 10px; background: #0f172a; border-radius: 5px; overflow: hidden; }
@@ -39,7 +37,6 @@ input:focus, select:focus { border-color: #3b82f6; }
 .fill-water { background: #0ea5e9; }
 .danger { background: #ef4444 !important; }
 
-/* Water Widget */
 .water-widget { text-align: center; }
 .water-info { margin-bottom: 10px; }
 .water-big { font-size: 32px; font-weight: bold; color: #0ea5e9; }
@@ -50,18 +47,17 @@ input:focus, select:focus { border-color: #3b82f6; }
 .btn-water-minus { background: #334155; color: #fff; }
 .btn-water-plus { background: #0ea5e9; color: #fff; }
 
-/* Search & Portions */
 .results-list { list-style: none; background: #0f172a; border: 1px solid #334155; border-radius: 8px; max-height: 200px; overflow-y: auto; margin-top: 5px; }
 .results-list li { padding: 12px; border-bottom: 1px solid #334155; cursor: pointer; font-size: 14px; }
 .results-list li:active { background: #334155; }
+
 .portion-box { background: #0f172a; border: 1px solid #3b82f6; padding: 15px; border-radius: 8px; margin-top: 15px; }
-.preview-title { color: #3b82f6; text-align: center; margin-bottom: 15px; font-size: 16px; }
+.preview-title { color: #3b82f6; text-align: center; margin-bottom: 15px; font-size: 16px; font-weight: bold; }
 .preview-macros { display: flex; justify-content: space-around; text-align: center; margin-top: 15px; padding: 10px; background: #1e293b; border-radius: 8px; }
 .pm-val { display: block; font-weight: bold; font-size: 16px; color: #f8fafc; }
 .pm-lbl { font-size: 11px; color: #94a3b8; }
 .total-weight { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 10px; }
 
-/* Food List */
 .food-list { list-style: none; }
 .food-list li { background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; }
 .food-name { font-weight: bold; font-size: 14px; display: block; margin-bottom: 4px;}
