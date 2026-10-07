@@ -3,22 +3,20 @@ let today = { cal: 0, pro: 0, fat: 0, car: 0, water: 0 };
 let history = [];
 let activeFood = null;
 
-// Base de Datos Local (Venezuela & Genéricos)
 const LOCAL_DB = [
   { name: "Arepa de Maíz (Asada)", macros: { cal: 2.15, pro: 0.05, fat: 0.01, car: 0.46 }, measures: [{l: "1 Gramo", w: 1}, {l: "Arepa Mediana (120g)", w: 120}, {l: "Arepa Grande (180g)", w: 180}] },
   { name: "Pan Canilla", macros: { cal: 2.75, pro: 0.09, fat: 0.02, car: 0.53 }, measures: [{l: "1 Gramo", w: 1}, {l: "Media Canilla (100g)", w: 100}, {l: "Canilla Entera (200g)", w: 200}] },
-  { name: "Queso Blanco Llanero Rallado", macros: { cal: 3.50, pro: 0.22, fat: 0.28, car: 0.02 }, measures: [{l: "1 Gramo", w: 1}, {l: "Cucharada Colmada (15g)", w: 15}, {l: "Taza (100g)", w: 100}] },
-  { name: "Pechuga de Pollo Cocida", macros: { cal: 1.65, pro: 0.31, fat: 0.03, car: 0.00 }, measures: [{l: "1 Gramo", w: 1}, {l: "Filete (150g)", w: 150}, {l: "Taza Desmenuzado (125g)", w: 125}] },
-  { name: "Arroz Blanco Cocido", macros: { cal: 1.30, pro: 0.02, fat: 0.00, car: 0.28 }, measures: [{l: "1 Gramo", w: 1}, {l: "Media Taza (75g)", w: 75}, {l: "Taza Completa (150g)", w: 150}] },
+  { name: "Queso Blanco Llanero Rallado", macros: { cal: 3.50, pro: 0.22, fat: 0.28, car: 0.02 }, measures: [{l: "1 Gramo", w: 1}, {l: "Cucharada (15g)", w: 15}, {l: "Taza (100g)", w: 100}] },
+  { name: "Pechuga de Pollo Cocida", macros: { cal: 1.65, pro: 0.31, fat: 0.03, car: 0.00 }, measures: [{l: "1 Gramo", w: 1}, {l: "Filete (150g)", w: 150}, {l: "Taza (125g)", w: 125}] },
+  { name: "Arroz Blanco Cocido", macros: { cal: 1.30, pro: 0.02, fat: 0.00, car: 0.28 }, measures: [{l: "1 Gramo", w: 1}, {l: "Media Taza (75g)", w: 75}, {l: "Taza (150g)", w: 150}] },
   { name: "Huevo Entero", macros: { cal: 1.43, pro: 0.13, fat: 0.10, car: 0.01 }, measures: [{l: "1 Gramo", w: 1}, {l: "1 Huevo Grande (50g)", w: 50}] }
 ];
 
 document.addEventListener('DOMContentLoaded', loadData);
 
-// 1. CÁLCULO DE METAS (Basado en imagen + Mifflin-St Jeor)
-function setWorkout(kcal) {
+window.setWorkout = function(kcal) {
   document.getElementById('workout-kcal').value = kcal;
-}
+};
 
 document.getElementById('tdee-form').addEventListener('submit', (e) => {
   e.preventDefault();
@@ -31,26 +29,23 @@ document.getElementById('tdee-form').addEventListener('submit', (e) => {
   const workout = parseFloat(document.getElementById('workout-kcal').value);
   const deficit = parseFloat(document.getElementById('deficit').value) / 100;
 
-  // Mifflin-St Jeor
   let bmr = (10 * weight) + (6.25 * height) - (5 * age);
   bmr += (gender === 'M') ? 5 : -161;
 
-  // Gasto Total = BMR base + NEAT por pasos (~0.04 kcal por paso) + Entreno
   const maintenance = bmr + (steps * 0.04) + workout;
   const targetCals = maintenance - (maintenance * deficit);
 
   tdee.cal = Math.round(targetCals);
-  tdee.pro = Math.round(weight * 2.2); // 2.2g por kg para hipertrofia/definición
+  tdee.pro = Math.round(weight * 2.2); 
   tdee.fat = Math.round(weight * 0.9);
   tdee.car = Math.round((tdee.cal - (tdee.pro * 4) - (tdee.fat * 9)) / 4);
-  tdee.water = Math.round(weight * 35); // 35ml por kg de peso
+  tdee.water = Math.round(weight * 35);
 
   document.getElementById('app-content').classList.remove('hidden');
   updateUI();
   saveData();
 });
 
-// 2. SISTEMA DE AGUA
 window.addWater = function(amount) {
   today.water += amount;
   if(today.water < 0) today.water = 0;
@@ -58,7 +53,6 @@ window.addWater = function(amount) {
   saveData();
 };
 
-// 3. MOTOR DE BÚSQUEDA Y MULTIPLICADOR DE PORCIONES
 const searchInput = document.getElementById('search-input');
 const resultsList = document.getElementById('search-results');
 const portionBox = document.getElementById('portion-calculator');
@@ -78,12 +72,10 @@ searchInput.addEventListener('input', (e) => {
     resultsList.classList.remove('hidden');
     let results = [];
 
-    // Búsqueda Local
     LOCAL_DB.forEach(item => {
       if (item.name.toLowerCase().includes(query)) results.push({...item, source: '🏠 Local'});
     });
 
-    // Búsqueda API (OpenFoodFacts)
     try {
       const res = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=5`);
       const data = await res.json();
@@ -93,7 +85,7 @@ searchInput.addEventListener('input', (e) => {
         if (name && cal > 0) {
           let measures = [{l: "1 Gramo", w: 1}];
           if(p.serving_quantity) measures.push({l: `Porción (${p.serving_quantity}g)`, w: parseFloat(p.serving_quantity)});
-          measures.push({l: "Porción Estándar (50g)", w: 50}, {l: "Taza/Plato (150g)", w: 150});
+          measures.push({l: "Porción (50g)", w: 50}, {l: "Taza/Plato (150g)", w: 150});
           
           results.push({
             name: name,
@@ -128,7 +120,6 @@ function selectFood(food) {
   });
   qtyInput.value = 1;
   
-  // Auto-seleccionar la segunda opción (la porción real) si existe, en vez del gramo
   if(food.measures.length > 1) measureSelect.selectedIndex = 1;
   
   portionBox.classList.remove('hidden');
@@ -170,7 +161,6 @@ document.getElementById('btn-add-food').addEventListener('click', () => {
   saveData();
 });
 
-// 4. UI Y MEMORIA
 window.deleteEntry = function(id) {
   const idx = history.findIndex(x => x.id === id);
   if(idx > -1) {
@@ -225,11 +215,11 @@ function updateUI() {
 }
 
 function saveData() {
-  localStorage.setItem('macro_data_v3', JSON.stringify({ date: new Date().toDateString(), tdee, today, history }));
+  localStorage.setItem('macro_data_v4', JSON.stringify({ date: new Date().toDateString(), tdee, today, history }));
 }
 
 function loadData() {
-  const saved = localStorage.getItem('macro_data_v3');
+  const saved = localStorage.getItem('macro_data_v4');
   if(!saved) return;
   const data = JSON.parse(saved);
   
@@ -242,7 +232,7 @@ function loadData() {
     if(data.today) today = data.today;
     if(data.history) history = data.history;
   } else {
-    saveData(); // Nuevo día, reset automático
+    saveData(); 
   }
   updateUI();
 }
